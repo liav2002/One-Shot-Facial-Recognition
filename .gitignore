@@ -1,2 +1,7 @@
 .idea/
 temp/
+data/__pycache__
+notebooks/.ipynb_checkpoints
+unitests/.pytest_cache
+unitests/__pycache__
+utils/__pycache__
