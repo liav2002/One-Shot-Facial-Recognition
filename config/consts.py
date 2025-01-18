@@ -1,0 +1,1 @@
+CONFIG_FILE_PATHS = "../config/file_paths.yaml"

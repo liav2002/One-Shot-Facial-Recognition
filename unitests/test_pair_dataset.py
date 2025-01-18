@@ -1,15 +1,20 @@
 import unittest
 from torchvision import transforms
 
-from data.pairs_dataset import PairsDataset
+from config.consts import CONFIG_FILE_PATHS
+from utils.config_loader import load_config
 from utils.load_pairs import load_pairs_from_txt_file
+
+from data.pairs_dataset import PairsDataset
 
 
 class TestPairsDataset(unittest.TestCase):
     def setUp(self):
         """Set up the LFW2 dataset with sample train pairs."""
-        self.train_pairs_path = '../data/pairsDevTrain.txt'
-        self.data_path = '../data/lfw2/'
+        paths = load_config(CONFIG_FILE_PATHS)
+
+        self.train_pairs_path = paths["train_file"]
+        self.data_path = paths["lfw_dataset"]
 
         self.train_df = load_pairs_from_txt_file(self.train_pairs_path, self.data_path)
 
