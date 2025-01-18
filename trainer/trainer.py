@@ -1,5 +1,6 @@
 import os
 import torch
+import pandas as pd
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
@@ -8,14 +9,14 @@ from torchvision.transforms import Compose, Resize, ToTensor
 
 from model.siamese_network import SiameseNetwork
 from data.pairs_dataset import PairsDataset
-from utils.config_loader import load_config
+from utils.load_pairs import load_pairs_from_txt_file
 from utils.logger import Logger
 
 
 class Trainer:
-    def __init__(self, config_path: str, logger: Logger):
+    def __init__(self, config: dict, logger: Logger):
         self.logger = logger
-        self.config = load_config(config_path)
+        self.config = config
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = SiameseNetwork(self.config).to(self.device)
         self._prepare_data()
@@ -38,7 +39,7 @@ class Trainer:
         ])
 
     def _prepare_data(self):
-        full_df = PairsDataset.load_pairs_from_txt_file(
+        full_df = load_pairs_from_txt_file(
             self.config['data']['train_pairs_path'],
             self.config['data']['lfw_data_path']
         )

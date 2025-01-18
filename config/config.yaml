@@ -51,15 +51,15 @@ training:
     min_delta: 0.001
 
 data:
-  train_pairs_path: ../data/pairsDevTrain.txt
-  test_pairs_path: ../data/pairsDevTest.txt
-  lfw_data_path: ../data/lfw2/
+  train_pairs_path: ./data/pairsDevTrain.txt
+  test_pairs_path: ./data/pairsDevTest.txt
+  lfw_data_path: ./data/lfw2/
   image_size: [ 105, 105 ]
 
 logging:
   mlflow_experiment: siamese_one_shot
-  checkpoint_dir: ../output/checkpoints/
-  logs_dir: ../output/logs/
+  checkpoint_dir: ./output/checkpoints/
+  logs_dir: ./output/logs/
   log_interval: 10
 
 validation:

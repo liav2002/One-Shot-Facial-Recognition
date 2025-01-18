@@ -1,2 +1,0 @@
-lfw_dataset: '../data/lfw2/'
-train_file:  '../data/pairsDevTrain.txt'
