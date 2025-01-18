@@ -15,7 +15,6 @@ class SiameseNetwork(nn.Module):
 
         cnn_config = config['model']['cnn_layers']
         input_size = config['model']['input_size']
-
         self.cnn = nn.Sequential(
             nn.Conv2d(
                 in_channels=input_size[0],
@@ -65,6 +64,42 @@ class SiameseNetwork(nn.Module):
             nn.Linear(embedding_dim, 1),
             nn.Sigmoid(),
         )
+
+        self.init_config = config['model']['initialization']
+
+        self.apply(self._initialize_weights)
+
+    def _initialize_weights(self, module):
+        """
+        Initialize weights and biases for the network using configuration.
+
+        Args:
+            module (nn.Module): The layer to initialize.
+        """
+        if isinstance(module, nn.Conv2d):
+            nn.init.normal_(
+                module.weight,
+                mean=self.init_config['conv_weights']['mean'],
+                std=self.init_config['conv_weights']['std']
+            )
+            if module.bias is not None:
+                nn.init.normal_(
+                    module.bias,
+                    mean=self.init_config['conv_biases']['mean'],
+                    std=self.init_config['conv_biases']['std']
+                )
+        elif isinstance(module, nn.Linear):
+            nn.init.normal_(
+                module.weight,
+                mean=self.init_config['fc_weights']['mean'],
+                std=self.init_config['fc_weights']['std']
+            )
+            if module.bias is not None:
+                nn.init.normal_(
+                    module.bias,
+                    mean=self.init_config['fc_biases']['mean'],
+                    std=self.init_config['fc_biases']['std']
+                )
 
     def forward(self, x1, x2):
         """

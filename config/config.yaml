@@ -23,6 +23,19 @@ model:
       stride: 1
   fc_layers:
     embedding_dim: 4096
+  initialization:
+    conv_weights:
+      mean: 0.0
+      std: 0.01
+    conv_biases:
+      mean: 0.5
+      std: 0.01
+    fc_weights:
+      mean: 0.0
+      std: 0.2
+    fc_biases:
+      mean: 0.5
+      std: 0.01
 
 training:
   batch_size: 128
