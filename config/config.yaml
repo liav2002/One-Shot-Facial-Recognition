@@ -1,6 +1,6 @@
 model:
   architecture: SiameseNetwork
-  input_size: [ 1, 64, 64 ]
+  input_size: [ 1, 105, 105 ]
   cnn_layers:
     conv1:
       out_channels: 64
@@ -25,21 +25,23 @@ model:
     embedding_dim: 4096
 
 training:
-  batch_size: 32
-  num_epochs: 100
+  batch_size: 128
+  num_epochs: 200
   learning_rate: 0.0001
-  optimizer: Adam
-  loss_function: BinaryCrossEntropy
+  learning_rate_decay: 0.99
+  momentum: 0.5
+  optimizer: SGD
+  loss_function: RegularizedCrossEntropy
   weight_decay: 0.0001
   early_stopping:
-    patience: 10
+    patience: 20
     min_delta: 0.001
 
 data:
   train_pairs_path: ../data/pairsDevTrain.txt
   test_pairs_path: ../data/pairsDevTest.txt
   lfw_data_path: ../data/lfw2/
-  image_size: [ 64, 64 ]
+  image_size: [ 105, 105 ]
 
 logging:
   mlflow_experiment: siamese_one_shot
@@ -49,6 +51,7 @@ logging:
 validation:
   val_split: 0.2
   shuffle: true
+  random_seed: 42
 
 testing:
   batch_size: 64
