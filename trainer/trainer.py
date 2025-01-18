@@ -5,20 +5,24 @@ from torch.utils.data import DataLoader
 from sklearn.model_selection import train_test_split
 from torchvision.transforms import Compose, Resize, ToTensor
 
-from utils.config_loader import load_config
 from data.pairs_dataset import PairsDataset
+
+from utils.config_loader import load_config
+from utils.logger import Logger
 
 from model.siamese_network import SiameseNetwork
 
 
 class Trainer:
-    def __init__(self, config_path: str):
+    def __init__(self, config_path: str, logger: Logger):
         """
         Initialize the Trainer with the configuration file.
 
         Args:
+            logger (Logger): Logger instance for logging to console, file, and MLFlow.
             config_path (str): Path to the YAML configuration file.
         """
+        self.logger = logger
         self.config = load_config(config_path)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = SiameseNetwork(self.config).to(self.device)
@@ -85,6 +89,8 @@ class Trainer:
             shuffle=False
         )
 
+        self.logger.log_message(f"Data prepared: {len(train_df)} training pairs, {len(val_df)} validation pairs.")
+
     def _initialize_optimizer(self):
         """Initialize the optimizer based on configuration."""
         optimizer_name = self.config['training']['optimizer']
@@ -116,12 +122,12 @@ class Trainer:
             l2_reg += torch.norm(param, 2)
         return -cross_entropy.mean() + self.config['training']['weight_decay'] * l2_reg
 
-    def train_one_epoch(self):
+    def train_one_epoch(self, epoch):
         """Perform one epoch of training."""
         self.model.train()
         running_loss = 0.0
 
-        for batch in self.train_loader:
+        for batch_idx, batch in enumerate(self.train_loader, start=1):
             (img1, img2), labels = batch
             img1, img2, labels = img1.to(self.device), img2.to(self.device), labels.to(self.device)
 
@@ -134,8 +140,11 @@ class Trainer:
 
             running_loss += loss.item()
 
-        self.scheduler.step()
+            # Log progress every log_interval batches
+            if batch_idx % self.logger.log_interval == 0:
+                self.logger.log_message(f"Epoch {epoch}, Batch {batch_idx}: Loss = {loss.item():.4f}")
 
+        self.scheduler.step()
         return running_loss / len(self.train_loader)
 
     def validate(self):
@@ -148,7 +157,6 @@ class Trainer:
                 img1, img2, labels = img1.to(self.device), img2.to(self.device), labels.to(self.device)
 
                 outputs = self.model(img1, img2)
-
                 loss = self.loss_fn(outputs, labels.unsqueeze(1).float())
                 val_loss += loss.item()
 
@@ -168,21 +176,21 @@ class Trainer:
         best_val_loss = float('inf')
         patience_counter = 0
 
-        for epoch in range(self.num_epochs):
-            train_loss = self.train_one_epoch()
+        for epoch in range(1, self.num_epochs + 1):
+            train_loss = self.train_one_epoch(epoch)
             val_loss = self.validate()
 
-            print(f"Epoch {epoch + 1}/{self.num_epochs}:")
-            print(f"    Train Loss: {train_loss:.4f}")
-            print(f"    Validation Loss: {val_loss:.4f}")
+            # Log metrics
+            self.logger.log_message(f"Epoch {epoch}/{self.num_epochs}: Train Loss = {train_loss:.4f}, Val Loss = {val_loss:.4f}")
+            self.logger.log_metrics({"train_loss": train_loss, "val_loss": val_loss}, step=epoch)
 
             if val_loss < best_val_loss - self.early_stopping_delta:
                 best_val_loss = val_loss
                 patience_counter = 0
-                self.save_model(f"{self.checkpoint_dir}/best_model.pth")
-                print("    Model improved. Saving...")
+                self.save_model(f"{self.config['logging']['checkpoint_dir']}/best_model.pth")
+                self.logger.log_message(f"Model improved at epoch {epoch}. Checkpoint saved.")
             else:
                 patience_counter += 1
                 if patience_counter >= self.early_stopping_patience:
-                    print("    Early stopping triggered.")
+                    self.logger.log_message("Early stopping triggered.")
                     break
