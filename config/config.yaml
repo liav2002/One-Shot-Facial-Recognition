@@ -1,0 +1,55 @@
+model:
+  architecture: SiameseNetwork
+  input_size: [ 1, 64, 64 ]
+  cnn_layers:
+    conv1:
+      out_channels: 64
+      kernel_size: 10
+      stride: 1
+      pool_size: 2
+    conv2:
+      out_channels: 128
+      kernel_size: 7
+      stride: 1
+      pool_size: 2
+    conv3:
+      out_channels: 128
+      kernel_size: 4
+      stride: 1
+      pool_size: 2
+    conv4:
+      out_channels: 256
+      kernel_size: 4
+      stride: 1
+  fc_layers:
+    embedding_dim: 4096
+
+training:
+  batch_size: 32
+  num_epochs: 100
+  learning_rate: 0.0001
+  optimizer: Adam
+  loss_function: BinaryCrossEntropy
+  weight_decay: 0.0001
+  early_stopping:
+    patience: 10
+    min_delta: 0.001
+
+data:
+  train_pairs_path: ../data/pairsDevTrain.txt
+  test_pairs_path: ../data/pairsDevTest.txt
+  lfw_data_path: ../data/lfw2/
+  image_size: [ 64, 64 ]
+
+logging:
+  mlflow_experiment: siamese_one_shot
+  checkpoint_dir: checkpoints/
+  log_interval: 10
+
+validation:
+  val_split: 0.2
+  shuffle: true
+
+testing:
+  batch_size: 64
+  save_predictions: true

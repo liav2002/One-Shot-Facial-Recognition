@@ -2,11 +2,14 @@ import unittest
 import torch
 from model.siamese_network import SiameseNetwork
 
+from utils.config_loader import load_config
+from config.consts import CONFIG_PATH
+
 
 class TestSiameseNetwork(unittest.TestCase):
     def setUp(self):
         """Initialize the Siamese Network and create dummy inputs."""
-        self.model = SiameseNetwork()
+        self.model = SiameseNetwork(load_config(CONFIG_PATH))
         self.x1 = torch.randn(2, 1, 105, 105)
         self.x2 = torch.randn(2, 1, 105, 105)
 

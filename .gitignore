@@ -6,3 +6,4 @@ unitests/.pytest_cache
 unitests/__pycache__
 utils/__pycache__
 config/__pycache__
+model/__pycache__

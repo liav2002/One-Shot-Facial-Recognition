@@ -4,36 +4,65 @@ import torch.nn.functional as F
 
 
 class SiameseNetwork(nn.Module):
-    def __init__(self):
+    def __init__(self, config: dict):
         """
-        Siamese Network architecture as described in the paper.
+        Siamese Network architecture, dynamically built based on configuration.
+
+        Args:
+            config (dict): Configuration dictionary containing model parameters.
         """
         super(SiameseNetwork, self).__init__()
 
+        cnn_config = config['model']['cnn_layers']
+        input_size = config['model']['input_size']
+
         self.cnn = nn.Sequential(
-            nn.Conv2d(1, 64, kernel_size=10, stride=1),
+            nn.Conv2d(
+                in_channels=input_size[0],
+                out_channels=cnn_config['conv1']['out_channels'],
+                kernel_size=cnn_config['conv1']['kernel_size'],
+                stride=cnn_config['conv1']['stride']
+            ),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.MaxPool2d(kernel_size=cnn_config['conv1']['pool_size']),
 
-            nn.Conv2d(64, 128, kernel_size=7, stride=1),
+            nn.Conv2d(
+                in_channels=cnn_config['conv1']['out_channels'],
+                out_channels=cnn_config['conv2']['out_channels'],
+                kernel_size=cnn_config['conv2']['kernel_size'],
+                stride=cnn_config['conv2']['stride']
+            ),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.MaxPool2d(kernel_size=cnn_config['conv2']['pool_size']),
 
-            nn.Conv2d(128, 128, kernel_size=4, stride=1),
+            nn.Conv2d(
+                in_channels=cnn_config['conv2']['out_channels'],
+                out_channels=cnn_config['conv3']['out_channels'],
+                kernel_size=cnn_config['conv3']['kernel_size'],
+                stride=cnn_config['conv3']['stride']
+            ),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.MaxPool2d(kernel_size=cnn_config['conv3']['pool_size']),
 
-            nn.Conv2d(128, 256, kernel_size=4, stride=1),
+            nn.Conv2d(
+                in_channels=cnn_config['conv3']['out_channels'],
+                out_channels=cnn_config['conv4']['out_channels'],
+                kernel_size=cnn_config['conv4']['kernel_size'],
+                stride=cnn_config['conv4']['stride']
+            ),
             nn.ReLU(),
         )
 
+        self.flattened_size = cnn_config['conv4']['out_channels'] * 6 * 6
+
+        embedding_dim = config['model']['fc_layers']['embedding_dim']
         self.fc = nn.Sequential(
-            nn.Linear(256 * 6 * 6, 4096),
+            nn.Linear(self.flattened_size, embedding_dim),
             nn.Sigmoid(),
         )
 
         self.similarity = nn.Sequential(
-            nn.Linear(4096, 1),
+            nn.Linear(embedding_dim, 1),
             nn.Sigmoid(),
         )
 
@@ -42,8 +71,8 @@ class SiameseNetwork(nn.Module):
         Forward pass for the Siamese Network.
 
         Args:
-            x1 (torch.Tensor): First input image tensor of shape [B, 1, H, W].
-            x2 (torch.Tensor): Second input image tensor of shape [B, 1, H, W].
+            x1 (torch.Tensor): First input image tensor of shape [B, C, H, W].
+            x2 (torch.Tensor): Second input image tensor of shape [B, C, H, W].
 
         Returns:
             torch.Tensor: Similarity score between the two inputs, shape [B, 1].

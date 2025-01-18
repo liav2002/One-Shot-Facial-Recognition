@@ -1,1 +1,1 @@
-CONFIG_FILE_PATHS = "../config/file_paths.yaml"
+CONFIG_PATH = "../config/config.yaml"
