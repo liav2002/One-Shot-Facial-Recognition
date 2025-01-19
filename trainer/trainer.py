@@ -53,7 +53,7 @@ class Trainer:
         )
 
         train_df = full_df[
-            full_df['person1'].isin(train_people) & full_df['person2'].isin(train_people)
+            full_df['person1'].isin(train_people) | full_df['person2'].isin(train_people)
         ]
 
         val_df = full_df[
@@ -92,7 +92,7 @@ class Trainer:
         cross_entropy = labels * torch.log(outputs) + (1 - labels) * torch.log(1 - outputs)
         l2_reg = torch.tensor(0., requires_grad=True).to(self.device)
         for param in self.model.parameters():
-            l2_reg += torch.norm(param, 2)
+            l2_reg = l2_reg + torch.norm(param, 2)
         return -cross_entropy.mean() + self.config['training']['weight_decay'] * l2_reg
 
     def save_checkpoint(self, epoch, path):

@@ -10,3 +10,4 @@ model/__pycache__/
 scripts/__pycache__/
 trainer/__pycache__/
 mlruns/
+output/
