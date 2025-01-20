@@ -11,6 +11,6 @@ def train_model(run_name = None):
     logger = get_logger(config)
     trainer = Trainer(config)
 
-    logger.start_run(run_name=run_name)
-    trainer.train()
-    logger.end_run()
+    # logger.start_run(run_name=run_name)
+    # trainer.train()
+    # logger.end_run()

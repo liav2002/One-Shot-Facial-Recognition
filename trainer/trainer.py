@@ -82,12 +82,32 @@ class Trainer:
         )
 
         train_df = full_df[
-            full_df['person1'].isin(train_people) | full_df['person2'].isin(train_people)
+            full_df['person1'].isin(train_people) & full_df['person2'].isin(train_people)
             ]
 
         val_df = full_df[
             full_df['person1'].isin(val_people) & full_df['person2'].isin(val_people)
             ]
+
+        # Check if each 'person1' and 'person2' in full_df is in the respective train_df and val_df
+        mask_A_person1 = full_df['person1'].isin(train_df['person1']) & full_df['person2'].isin(train_df['person2'])
+        mask_B_person1 = full_df['person1'].isin(val_df['person1']) & full_df['person2'].isin(val_df['person2'])
+
+        # Create dropped pairs DataFrame by negating both masks
+        dropped_pairs_df = full_df[~(mask_A_person1 | mask_B_person1)]
+
+        # Calculate the total number of pairs
+        total_pairs_len = full_df.shape[0]
+
+        # Calculate the number of train, validation, and dropped pairs
+        train_pairs_len = mask_A_person1.sum()
+        val_pairs_len = mask_B_person1.sum()
+        dropped_pairs_len = total_pairs_len - train_pairs_len - val_pairs_len
+
+        # Calculate percentages
+        train_pairs_percent = (train_pairs_len / total_pairs_len) * 100
+        val_pairs_percent = (val_pairs_len / total_pairs_len) * 100
+        dropped_pairs_percent = (dropped_pairs_len / total_pairs_len) * 100
 
         train_transforms = self._get_transforms(stage="train")
         val_transforms = self._get_transforms(stage="val")
