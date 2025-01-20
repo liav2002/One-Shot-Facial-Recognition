@@ -32,11 +32,36 @@ class Trainer:
         self.best_val_loss = float('inf')
         self.start_epoch = 0
 
-    def _get_transforms(self):
-        return Compose([
-            Resize(self.config['data']['image_size']),
-            ToTensor(),
-        ])
+    def _get_transforms(self, stage: str):
+        """
+        Define and return image transformations based on the configuration.
+
+        Args:
+            stage (str): The stage of the data (e.g., "train", "val").
+
+        Returns:
+            torchvision.transforms.Compose: Composed transformations.
+        """
+        transform_list = []
+        for transform_config in self.config['data']['transformations'][stage]:
+            transform_type = transform_config['type']
+            if transform_type == "Resize":
+                transform_list.append(transforms.Resize(transform_config['size']))
+            elif transform_type == "RandomHorizontalFlip":
+                transform_list.append(transforms.RandomHorizontalFlip(p=transform_config['probability']))
+            elif transform_type == "RandomRotation":
+                transform_list.append(transforms.RandomRotation(degrees=transform_config['degrees']))
+            elif transform_type == "RandomAdjustSharpness":
+                transform_list.append(transforms.RandomAdjustSharpness(
+                    sharpness_factor=transform_config['sharpness_factor'],
+                    p=transform_config['probability']
+                ))
+            elif transform_type == "ToTensor":
+                transform_list.append(transforms.ToTensor())
+            else:
+                raise ValueError(f"Unsupported transform type: {transform_type}")
+
+        return transforms.Compose(transform_list)
 
     def _prepare_data(self):
         full_df = load_pairs_from_txt_file(
@@ -54,22 +79,23 @@ class Trainer:
 
         train_df = full_df[
             full_df['person1'].isin(train_people) | full_df['person2'].isin(train_people)
-        ]
+            ]
 
         val_df = full_df[
             full_df['person1'].isin(val_people) & full_df['person2'].isin(val_people)
-        ]
+            ]
 
-        transforms = self._get_transforms()
+        train_transforms = self._get_transforms(stage="train")
+        val_transforms = self._get_transforms(stage="val")
 
         self.train_loader = DataLoader(
-            PairsDataset(train_df, transform=transforms),
+            PairsDataset(train_df, transform=train_transforms),
             batch_size=self.config['training']['batch_size'],
             shuffle=True
         )
 
         self.val_loader = DataLoader(
-            PairsDataset(val_df, transform=transforms),
+            PairsDataset(val_df, transform=val_transforms),
             batch_size=self.config['training']['batch_size'],
             shuffle=False
         )

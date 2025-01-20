@@ -55,6 +55,22 @@ data:
   test_pairs_path: ./data/pairsDevTest.txt
   lfw_data_path: ./data/lfw2/
   image_size: [ 105, 105 ]
+  transformations:
+    train:
+      - type: Resize
+        size: [ 105, 105 ]
+      - type: RandomHorizontalFlip
+        probability: 0.5
+      - type: RandomRotation
+        degrees: 10
+      - type: RandomAdjustSharpness
+        sharpness_factor: 2
+        probability: 0.3
+      - type: ToTensor
+    val:
+      - type: Resize
+        size: [ 105, 105 ]
+      - type: ToTensor
 
 logging:
   mlflow_experiment: siamese_one_shot
