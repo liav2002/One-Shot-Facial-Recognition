@@ -199,7 +199,7 @@ class Trainer:
         }, step=epoch)
         return train_loss
 
-    def validate(self):
+    def validate(self, epoch):
         self.model.eval()
         val_loss = 0.0
         all_labels = []
@@ -232,7 +232,7 @@ class Trainer:
             "val_precision": precision,
             "val_recall": recall,
             "val_f1": f1
-        })
+        }, step=epoch)
         return val_loss
 
     def train(self):
@@ -240,7 +240,7 @@ class Trainer:
 
         for epoch in range(self.start_epoch + 1, self.num_epochs + 1):
             train_loss = self.train_one_epoch(epoch)
-            val_loss = self.validate()
+            val_loss = self.validate(epoch)
 
             self.logger.log_message(
                 f"Epoch {epoch}/{self.num_epochs}: Train Loss = {train_loss:.4f}, Val Loss = {val_loss:.4f}")
