@@ -43,8 +43,8 @@ training:
   learning_rate: 0.00001
   learning_rate_decay: 0.99
   momentum: 0.5
-  optimizer: SGD
-  loss_function: RegularizedCrossEntropy
+  optimizer: Adam
+  loss_function: BinaryCrossEntropy
   weight_decay: 0.00001
   early_stopping:
     patience: 50

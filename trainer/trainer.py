@@ -23,13 +23,7 @@ class Trainer:
         self.model = SiameseNetwork(self.config).to(self.device)
         self._prepare_data()
 
-        if config["training"]["loss_function"] == "RegularizedCrossEntropy":
-            self.loss_fn = nn.BCELoss()
-            self.logger.log_message(f"nn.BCELoss function defined.")
-        else:
-            self.loss_fn = self._regularized_loss
-            self.logger.log_message(f"self regularized loss function defined.")
-
+        self.loss_fn = self._initialize_loss_function()
         self.optimizer = self._initialize_optimizer()
         self.scheduler = optim.lr_scheduler.ExponentialLR(
             self.optimizer, gamma=self.config['training']['learning_rate_decay']
@@ -127,6 +121,17 @@ class Trainer:
             return optim.Adam(self.model.parameters(), lr=learning_rate, weight_decay=weight_decay)
         else:
             raise ValueError(f"Unsupported optimizer: {optimizer_name}")
+
+    def _initialize_loss_function(self):
+        loss_function_name = self.config['training']['loss_function']
+        if loss_function_name == "BinaryCrossEntropy":
+            self.logger.log_message(f"nn.BCELoss function defined as loss function.")
+            return nn.BCELoss()
+        elif loss_function_name == "RegularizedCrossEntropy":
+            self.logger.log_message(f"_regularized_loss function defined as loss function.")
+            return self._regularized_loss
+        else:
+            raise ValueError(f"Unsupported loss function: {loss_function_name}")
 
     def _regularized_loss(self, outputs, labels):
         cross_entropy = labels * torch.log(outputs) + (1 - labels) * torch.log(1 - outputs)
@@ -232,12 +237,14 @@ class Trainer:
 
     def train(self):
         patience_counter = 0
+
         for epoch in range(self.start_epoch + 1, self.num_epochs + 1):
             train_loss = self.train_one_epoch(epoch)
             val_loss = self.validate()
+
             self.logger.log_message(
                 f"Epoch {epoch}/{self.num_epochs}: Train Loss = {train_loss:.4f}, Val Loss = {val_loss:.4f}")
-            self.logger.log_metrics({"train_loss": train_loss, "val_loss": val_loss}, step=epoch)
+
             if val_loss < self.best_val_loss - self.early_stopping_delta:
                 self.best_val_loss = val_loss
                 patience_counter = 0
