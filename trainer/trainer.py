@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from sklearn.model_selection import train_test_split
-from torchvision.transforms import Compose, Resize, ToTensor
+import torchvision.transforms as transforms
 
 from model.siamese_network import SiameseNetwork
 from data.pairs_dataset import PairsDataset
