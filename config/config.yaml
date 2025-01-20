@@ -76,7 +76,7 @@ logging:
   mlflow_experiment: siamese_one_shot
   checkpoint_dir: ./output/checkpoints/
   logs_dir: ./output/logs/
-  log_interval: 10
+  log_interval: 5
 
 validation:
   val_split: 0.2

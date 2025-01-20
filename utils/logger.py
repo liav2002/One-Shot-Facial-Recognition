@@ -9,8 +9,10 @@ _logger_instance = None  # Global logger instance
 class Logger:
     def __init__(self, config: dict):
         self.logs_dir = config['logging']['logs_dir']
-        self.mlflow_experiment = config['logging']['mlflow_experiment']
         self.log_interval = config['logging']['log_interval']
+
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        self.mlflow_experiment = f"{config['logging']['mlflow_experiment']}_{timestamp}"
 
         os.makedirs(self.logs_dir, exist_ok=True)
 

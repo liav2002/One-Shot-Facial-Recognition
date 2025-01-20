@@ -1,11 +1,13 @@
 import os
 import torch
+import numpy as np
 import pandas as pd
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-from sklearn.model_selection import train_test_split
 import torchvision.transforms as transforms
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import precision_score, recall_score, f1_score
 
 from model.siamese_network import SiameseNetwork
 from data.pairs_dataset import PairsDataset
@@ -144,6 +146,7 @@ class Trainer:
         os.makedirs(os.path.dirname(path), exist_ok=True)
         torch.save(checkpoint, path)
         self.logger.log_message(f"Checkpoint saved at {path}")
+        self.logger.log_artifacts(os.path.dirname(path))
 
     def load_checkpoint(self, path):
         if not os.path.exists(path):
@@ -159,31 +162,73 @@ class Trainer:
     def train_one_epoch(self, epoch):
         self.model.train()
         running_loss = 0.0
+        correct = 0
+        total = 0
+
         for batch_idx, batch in enumerate(self.train_loader, start=1):
             (img1, img2), labels = batch
             img1, img2, labels = img1.to(self.device), img2.to(self.device), labels.to(self.device)
+
             self.optimizer.zero_grad()
-            outputs = self.model(img1, img2)
-            loss = self.loss_fn(outputs, labels.unsqueeze(1).float())
+            outputs = self.model(img1, img2).squeeze()
+            loss = self.loss_fn(outputs, labels.float())
             loss.backward()
             self.optimizer.step()
+
             running_loss += loss.item()
+            predictions = (outputs > 0.5).long()
+            correct += (predictions == labels).sum().item()
+            total += labels.size(0)
+
             if batch_idx % self.logger.log_interval == 0:
-                self.logger.log_message(f"Epoch {epoch}, Batch {batch_idx}: Loss = {loss.item():.4f}")
+                accuracy = correct / total
+                self.logger.log_message(
+                    f"Epoch {epoch}, Batch {batch_idx}: Loss = {loss.item():.4f}, Accuracy = {accuracy:.4f}")
+
         self.scheduler.step()
-        return running_loss / len(self.train_loader)
+        train_loss = running_loss / len(self.train_loader)
+        train_accuracy = correct / total
+        self.logger.log_metrics({
+            "train_loss": train_loss,
+            "train_accuracy": train_accuracy
+        }, step=epoch)
+        return train_loss
 
     def validate(self):
         self.model.eval()
         val_loss = 0.0
+        all_labels = []
+        all_predictions = []
+
         with torch.no_grad():
             for batch in self.val_loader:
                 (img1, img2), labels = batch
                 img1, img2, labels = img1.to(self.device), img2.to(self.device), labels.to(self.device)
-                outputs = self.model(img1, img2)
-                loss = self.loss_fn(outputs, labels.unsqueeze(1).float())
+
+                outputs = self.model(img1, img2).squeeze()
+                loss = self.loss_fn(outputs, labels.float())
                 val_loss += loss.item()
-        return val_loss / len(self.val_loader)
+
+                predictions = (outputs > 0.5).long()
+                all_labels.extend(labels.cpu().numpy())
+                all_predictions.extend(predictions.cpu().numpy())
+
+        val_loss /= len(self.val_loader)
+        accuracy = (np.array(all_predictions) == np.array(all_labels)).mean()
+        precision = precision_score(all_labels, all_predictions, zero_division=1)
+        recall = recall_score(all_labels, all_predictions, zero_division=1)
+        f1 = f1_score(all_labels, all_predictions, zero_division=1)
+
+        self.logger.log_message(
+            f"Validation: Loss = {val_loss:.4f}, Accuracy = {accuracy:.4f}, Precision = {precision:.4f}, Recall = {recall:.4f}, F1 = {f1:.4f}")
+        self.logger.log_metrics({
+            "val_loss": val_loss,
+            "val_accuracy": accuracy,
+            "val_precision": precision,
+            "val_recall": recall,
+            "val_f1": f1
+        })
+        return val_loss
 
     def train(self):
         patience_counter = 0
