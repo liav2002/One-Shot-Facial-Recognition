@@ -1,30 +1,34 @@
 import os
 import torch
+import numpy as np
 import pandas as pd
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-from sklearn.model_selection import train_test_split
 import torchvision.transforms as transforms
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import precision_score, recall_score, f1_score
 
 from model.siamese_network import SiameseNetwork
 from data.pairs_dataset import PairsDataset
 from utils.load_pairs import load_pairs_from_txt_file
-from utils.logger import Logger
+from utils.logger import get_logger
 
 
 class Trainer:
-    def __init__(self, config: dict, logger: Logger):
-        self.logger = logger
+    def __init__(self, config: dict):
+        self.logger = get_logger()
         self.config = config
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = SiameseNetwork(self.config).to(self.device)
         self._prepare_data()
-        self.loss_fn = self._regularized_loss
+
+        self.loss_fn = self._initialize_loss_function()
         self.optimizer = self._initialize_optimizer()
         self.scheduler = optim.lr_scheduler.ExponentialLR(
             self.optimizer, gamma=self.config['training']['learning_rate_decay']
         )
+
         self.num_epochs = self.config['training']['num_epochs']
         self.early_stopping_patience = self.config['training']['early_stopping']['patience']
         self.early_stopping_delta = self.config['training']['early_stopping']['min_delta']
@@ -108,11 +112,26 @@ class Trainer:
         momentum = self.config['training']['momentum']
         weight_decay = self.config['training']['weight_decay']
         if optimizer_name == "SGD":
+            self.logger.log_message(
+                f"SGD optimizer defined with lr={learning_rate}, momentum={momentum}, weight_decay={weight_decay}")
             return optim.SGD(self.model.parameters(), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
         elif optimizer_name == "Adam":
+            self.logger.log_message(
+                f"Adam optimizer defined with lr={learning_rate}, weight_decay={weight_decay}")
             return optim.Adam(self.model.parameters(), lr=learning_rate, weight_decay=weight_decay)
         else:
             raise ValueError(f"Unsupported optimizer: {optimizer_name}")
+
+    def _initialize_loss_function(self):
+        loss_function_name = self.config['training']['loss_function']
+        if loss_function_name == "BinaryCrossEntropy":
+            self.logger.log_message(f"nn.BCELoss function defined as loss function.")
+            return nn.BCELoss()
+        elif loss_function_name == "RegularizedCrossEntropy":
+            self.logger.log_message(f"_regularized_loss function defined as loss function.")
+            return self._regularized_loss
+        else:
+            raise ValueError(f"Unsupported loss function: {loss_function_name}")
 
     def _regularized_loss(self, outputs, labels):
         cross_entropy = labels * torch.log(outputs) + (1 - labels) * torch.log(1 - outputs)
@@ -132,6 +151,7 @@ class Trainer:
         os.makedirs(os.path.dirname(path), exist_ok=True)
         torch.save(checkpoint, path)
         self.logger.log_message(f"Checkpoint saved at {path}")
+        self.logger.log_artifacts(os.path.dirname(path))
 
     def load_checkpoint(self, path):
         if not os.path.exists(path):
@@ -147,39 +167,84 @@ class Trainer:
     def train_one_epoch(self, epoch):
         self.model.train()
         running_loss = 0.0
+        correct = 0
+        total = 0
+
         for batch_idx, batch in enumerate(self.train_loader, start=1):
             (img1, img2), labels = batch
             img1, img2, labels = img1.to(self.device), img2.to(self.device), labels.to(self.device)
+
             self.optimizer.zero_grad()
-            outputs = self.model(img1, img2)
-            loss = self.loss_fn(outputs, labels.unsqueeze(1).float())
+            outputs = self.model(img1, img2).squeeze()
+            loss = self.loss_fn(outputs, labels.float())
             loss.backward()
             self.optimizer.step()
-            running_loss += loss.item()
-            if batch_idx % self.logger.log_interval == 0:
-                self.logger.log_message(f"Epoch {epoch}, Batch {batch_idx}: Loss = {loss.item():.4f}")
-        self.scheduler.step()
-        return running_loss / len(self.train_loader)
 
-    def validate(self):
+            running_loss += loss.item()
+            predictions = (outputs > 0.5).long()
+            correct += (predictions == labels).sum().item()
+            total += labels.size(0)
+
+            if batch_idx % self.logger.log_interval == 0:
+                accuracy = correct / total
+                self.logger.log_message(
+                    f"Epoch {epoch}, Batch {batch_idx}: Loss = {loss.item():.4f}, Accuracy = {accuracy:.4f}")
+
+        self.scheduler.step()
+        train_loss = running_loss / len(self.train_loader)
+        train_accuracy = correct / total
+        self.logger.log_metrics({
+            "train_loss": train_loss,
+            "train_accuracy": train_accuracy
+        }, step=epoch)
+        return train_loss
+
+    def validate(self, epoch):
         self.model.eval()
         val_loss = 0.0
+        all_labels = []
+        all_predictions = []
+
         with torch.no_grad():
             for batch in self.val_loader:
                 (img1, img2), labels = batch
                 img1, img2, labels = img1.to(self.device), img2.to(self.device), labels.to(self.device)
-                outputs = self.model(img1, img2)
-                loss = self.loss_fn(outputs, labels.unsqueeze(1).float())
+
+                outputs = self.model(img1, img2).squeeze()
+                loss = self.loss_fn(outputs, labels.float())
                 val_loss += loss.item()
-        return val_loss / len(self.val_loader)
+
+                predictions = (outputs > 0.5).long()
+                all_labels.extend(labels.cpu().numpy())
+                all_predictions.extend(predictions.cpu().numpy())
+
+        val_loss /= len(self.val_loader)
+        accuracy = (np.array(all_predictions) == np.array(all_labels)).mean()
+        precision = precision_score(all_labels, all_predictions, zero_division=1)
+        recall = recall_score(all_labels, all_predictions, zero_division=1)
+        f1 = f1_score(all_labels, all_predictions, zero_division=1)
+
+        self.logger.log_message(
+            f"Validation: Loss = {val_loss:.4f}, Accuracy = {accuracy:.4f}, Precision = {precision:.4f}, Recall = {recall:.4f}, F1 = {f1:.4f}")
+        self.logger.log_metrics({
+            "val_loss": val_loss,
+            "val_accuracy": accuracy,
+            "val_precision": precision,
+            "val_recall": recall,
+            "val_f1": f1
+        }, step=epoch)
+        return val_loss
 
     def train(self):
         patience_counter = 0
+
         for epoch in range(self.start_epoch + 1, self.num_epochs + 1):
             train_loss = self.train_one_epoch(epoch)
-            val_loss = self.validate()
-            self.logger.log_message(f"Epoch {epoch}/{self.num_epochs}: Train Loss = {train_loss:.4f}, Val Loss = {val_loss:.4f}")
-            self.logger.log_metrics({"train_loss": train_loss, "val_loss": val_loss}, step=epoch)
+            val_loss = self.validate(epoch)
+
+            self.logger.log_message(
+                f"Epoch {epoch}/{self.num_epochs}: Train Loss = {train_loss:.4f}, Val Loss = {val_loss:.4f}")
+
             if val_loss < self.best_val_loss - self.early_stopping_delta:
                 self.best_val_loss = val_loss
                 patience_counter = 0
