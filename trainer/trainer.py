@@ -10,21 +10,29 @@ import torchvision.transforms as transforms
 from model.siamese_network import SiameseNetwork
 from data.pairs_dataset import PairsDataset
 from utils.load_pairs import load_pairs_from_txt_file
-from utils.logger import Logger
+from utils.logger import get_logger
 
 
 class Trainer:
-    def __init__(self, config: dict, logger: Logger):
-        self.logger = logger
+    def __init__(self, config: dict):
+        self.logger = get_logger()
         self.config = config
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = SiameseNetwork(self.config).to(self.device)
         self._prepare_data()
-        self.loss_fn = self._regularized_loss
+
+        if config["training"]["loss_function"] == "RegularizedCrossEntropy":
+            self.loss_fn = nn.BCELoss()
+            self.logger.log_message(f"nn.BCELoss function defined.")
+        else:
+            self.loss_fn = self._regularized_loss
+            self.logger.log_message(f"self regularized loss function defined.")
+
         self.optimizer = self._initialize_optimizer()
         self.scheduler = optim.lr_scheduler.ExponentialLR(
             self.optimizer, gamma=self.config['training']['learning_rate_decay']
         )
+
         self.num_epochs = self.config['training']['num_epochs']
         self.early_stopping_patience = self.config['training']['early_stopping']['patience']
         self.early_stopping_delta = self.config['training']['early_stopping']['min_delta']
@@ -108,8 +116,12 @@ class Trainer:
         momentum = self.config['training']['momentum']
         weight_decay = self.config['training']['weight_decay']
         if optimizer_name == "SGD":
+            self.logger.log_message(
+                f"SGD optimizer defined with lr={learning_rate}, momentum={momentum}, weight_decay={weight_decay}")
             return optim.SGD(self.model.parameters(), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
         elif optimizer_name == "Adam":
+            self.logger.log_message(
+                f"Adam optimizer defined with lr={learning_rate}, weight_decay={weight_decay}")
             return optim.Adam(self.model.parameters(), lr=learning_rate, weight_decay=weight_decay)
         else:
             raise ValueError(f"Unsupported optimizer: {optimizer_name}")
@@ -178,7 +190,8 @@ class Trainer:
         for epoch in range(self.start_epoch + 1, self.num_epochs + 1):
             train_loss = self.train_one_epoch(epoch)
             val_loss = self.validate()
-            self.logger.log_message(f"Epoch {epoch}/{self.num_epochs}: Train Loss = {train_loss:.4f}, Val Loss = {val_loss:.4f}")
+            self.logger.log_message(
+                f"Epoch {epoch}/{self.num_epochs}: Train Loss = {train_loss:.4f}, Val Loss = {val_loss:.4f}")
             self.logger.log_metrics({"train_loss": train_loss, "val_loss": val_loss}, step=epoch)
             if val_loss < self.best_val_loss - self.early_stopping_delta:
                 self.best_val_loss = val_loss

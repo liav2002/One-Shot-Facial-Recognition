@@ -3,15 +3,11 @@ import logging
 import mlflow
 from datetime import datetime
 
+_logger_instance = None  # Global logger instance
+
 
 class Logger:
     def __init__(self, config: dict):
-        """
-        Logger to handle console, file, and MLFlow logging.
-
-        Args:
-            config (dict): Configuration dictionary containing logging parameters.
-        """
         self.logs_dir = config['logging']['logs_dir']
         self.mlflow_experiment = config['logging']['mlflow_experiment']
         self.log_interval = config['logging']['log_interval']
@@ -35,61 +31,44 @@ class Logger:
         self.mlflow_run = None
 
     def start_run(self, run_name: str = None):
-        """
-        Start an MLFlow run.
-
-        Args:
-            run_name (str, optional): Name of the MLFlow run. Defaults to None.
-        """
         self.mlflow_run = mlflow.start_run(run_name=run_name)
 
     def log_metrics(self, metrics: dict, step: int = None):
-        """
-        Log metrics to MLFlow.
-
-        Args:
-            metrics (dict): Dictionary of metric names and values.
-            step (int, optional): Step or epoch for the metrics. Defaults to None.
-        """
         if self.mlflow_run:
             for key, value in metrics.items():
                 mlflow.log_metric(key, value, step=step)
 
     def log_params(self, params: dict):
-        """
-        Log parameters to MLFlow.
-
-        Args:
-            params (dict): Dictionary of parameter names and values.
-        """
         if self.mlflow_run:
             mlflow.log_params(params)
 
     def log_artifacts(self, artifact_path: str):
-        """
-        Log artifacts (e.g., model checkpoints) to MLFlow.
-
-        Args:
-            artifact_path (str): Path to the artifact directory or file.
-        """
         if self.mlflow_run:
             mlflow.log_artifacts(artifact_path)
 
     def log_message(self, message: str, level: str = "info"):
-        """
-        Log a message to console and file.
-
-        Args:
-            message (str): Message to log.
-            level (str): Logging level (e.g., "info", "warning", "error"). Defaults to "info".
-        """
         log_method = getattr(self.logger, level.lower(), self.logger.info)
         log_method(message)
 
     def end_run(self):
-        """
-        End the current MLFlow run.
-        """
         if self.mlflow_run:
             mlflow.end_run()
             self.mlflow_run = None
+
+
+def get_logger(config: dict = None) -> Logger:
+    """
+    Retrieve the global Logger instance. If it does not exist, create it.
+
+    Args:
+        config (dict): Configuration dictionary. Required on first initialization.
+
+    Returns:
+        Logger: The global Logger instance.
+    """
+    global _logger_instance
+    if _logger_instance is None:
+        if config is None:
+            raise ValueError("Logger must be initialized with a config before accessing.")
+        _logger_instance = Logger(config)
+    return _logger_instance
