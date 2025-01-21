@@ -79,7 +79,7 @@ logging:
   log_interval: 5
 
 validation:
-  val_split: 0.2
+  val_split: 0.3
   shuffle: true
   random_seed: 42
 
