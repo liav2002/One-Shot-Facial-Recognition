@@ -1,12 +1,10 @@
 import os
 import torch
 import numpy as np
-import pandas as pd
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import precision_score, recall_score, f1_score
 
 from utils.logger import get_logger
@@ -75,9 +73,8 @@ class Trainer:
             self.config['data']['lfw_data_path']
         )
 
-        train_df, val_df = split_pairs_by_connected_components(full_df, val_split=config["validation"]["val_split"],
-                                                               random_seed=config["validation"]["random_seed"],
-                                                               use_gpu=self.device.type == "cuda")
+        train_df, val_df = split_pairs_by_connected_components(full_df, val_split=self.config["validation"]["val_split"],
+                                                               random_seed=self.config["validation"]["random_seed"])
 
         train_transforms = self._get_transforms(stage="train")
         val_transforms = self._get_transforms(stage="val")

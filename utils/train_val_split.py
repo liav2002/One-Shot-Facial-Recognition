@@ -2,13 +2,41 @@ import torch
 import random
 import pandas as pd
 import networkx as nx
-from tqdm import tqdm
+from typing import Tuple
 from tabulate import tabulate
-from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+
+from utils.logger import get_logger
 
 
-def split_by_unique_persons(full_df, val_split, shuffle, random_seed):
-    print(f"Splitting Peoples by:\nTrain People - {(1 - val_split) * 100}%\nVal People - {val_split * 100}%\n")
+def split_by_unique_persons(
+        full_df: pd.DataFrame,
+        val_split: float,
+        shuffle: bool,
+        random_seed: int
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Splits a dataframe of pairs of people into training and validation sets based on unique people,
+    and calculates the percentage of pairs assigned to each set. The function also logs the split
+    statistics in a table format.
+
+    Args:
+        full_df (pd.DataFrame): The full dataframe containing pairs of people. It must contain
+            two columns 'person1' and 'person2' that represent the pairs of people.
+        val_split (float): The fraction of unique people to be assigned to the validation set.
+            The remaining will be assigned to the training set. Should be a value between 0 and 1.
+        shuffle (bool): Whether to shuffle the data before splitting.
+        random_seed (int): The random seed used to ensure reproducibility of the split.
+
+    Returns:
+        Tuple[pd.DataFrame, pd.DataFrame]: A tuple containing two dataframes:
+            - The training dataframe (`train_df`), containing the pairs assigned to the training set.
+            - The validation dataframe (`val_df`), containing the pairs assigned to the validation set.
+    """
+    logger = get_logger()
+
+    logger.log_message(
+        f"Splitting Peoples by:\nTrain People - {(1 - val_split) * 100}%\nVal People - {val_split * 100}%\n")
 
     unique_people = pd.concat([full_df['person1'], full_df['person2']]).unique()
 
@@ -42,14 +70,46 @@ def split_by_unique_persons(full_df, val_split, shuffle, random_seed):
     val_pairs_percent = (val_pairs_len / total_pairs_len) * 100
     dropped_pairs_percent = (dropped_pairs_len / total_pairs_len) * 100
 
-    print(f"Percent of Train DataFrame: {train_pairs_percent:.2f}%")
-    print(f"Percent of Validation DataFrame: {val_pairs_percent:.2f}%")
-    print(f"Percent of Dropped Pairs DataFrame: {dropped_pairs_percent:.2f}%")
+    # Prepare data for tabulate
+    split_results = [
+        ["Train People", len(train_people)],
+        ["Train Pairs", train_pairs_len, f"({train_pairs_percent:.2f}%)"],
+        ["Validation People", len(val_people)],
+        ["Validation Pairs", val_pairs_len, f"({val_pairs_percent:.2f}%)"],
+        ["Dropped Pairs", dropped_pairs_len, f"({dropped_pairs_percent:.2f}%)"]
+    ]
+
+    # Log the results with tabulate
+    logger.log_message("Split Results:")
+    logger.log_message("\n" + tabulate(split_results, headers=["Metric", "Count", "Percentage"], tablefmt="grid"))
+
+    return train_df, val_df
 
 
-def split_pairs_by_connected_components(full_df, val_split, random_seed, use_gpu=False):
+def split_pairs_by_connected_components(
+        full_df: pd.DataFrame,
+        val_split: float,
+        random_seed: int,
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Splits a dataframe of pairs of people into training and validation sets based on connected
+    components of a graph formed by pairs of people. Each connected component will be fully assigned
+    to either the training or validation set.
+
+    Args:
+        full_df (pd.DataFrame): The full dataframe containing pairs of people. It must contain two
+            columns 'person1' and 'person2' that represent the pairs of people.
+        val_split (float): The fraction of connected components to be assigned to the validation set.
+            The remaining will be assigned to the training set. Should be a value between 0 and 1.
+        random_seed (int): The random seed used to ensure reproducibility of the split.
+
+    Returns:
+        Tuple[pd.DataFrame, pd.DataFrame]: A tuple containing two dataframes:
+            - The training dataframe (`train_df`), containing the pairs assigned to the training set.
+            - The validation dataframe (`val_df`), containing the pairs assigned to the validation set.
+    """
+    logger = get_logger()
     random.seed(random_seed)
-    device = torch.device("cuda" if use_gpu and torch.cuda.is_available() else "cpu")
 
     # Create graph where nodes are people and edges represent connections between people
     G = nx.Graph()
@@ -115,7 +175,7 @@ def split_pairs_by_connected_components(full_df, val_split, random_seed, use_gpu
     ]
 
     # Print table using tabulate
-    print("\nSplit Results:")
-    print(tabulate(split_results, headers=["Metric", "Count", "Percentage"], tablefmt="grid"))
+    logger.log_message("Split Results:")
+    logger.log_message("\n" + tabulate(split_results, headers=["Metric", "Count", "Percentage"], tablefmt="grid"))
 
     return train_df, val_df
