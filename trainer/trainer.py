@@ -1,18 +1,18 @@
 import os
 import torch
 import numpy as np
-import pandas as pd
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import precision_score, recall_score, f1_score
 
-from model.siamese_network import SiameseNetwork
-from data.pairs_dataset import PairsDataset
-from utils.load_pairs import load_pairs_from_txt_file
 from utils.logger import get_logger
+from utils.load_pairs import load_pairs_from_txt_file
+from utils.train_val_split import split_pairs_by_connected_components
+
+from data.pairs_dataset import PairsDataset
+from model.siamese_network import SiameseNetwork
 
 
 class Trainer:
@@ -73,21 +73,8 @@ class Trainer:
             self.config['data']['lfw_data_path']
         )
 
-        unique_people = pd.concat([full_df['person1'], full_df['person2']]).unique()
-
-        train_people, val_people = train_test_split(
-            unique_people, test_size=self.config['validation']['val_split'],
-            shuffle=self.config['validation']['shuffle'],
-            random_state=self.config['validation']['random_seed']
-        )
-
-        train_df = full_df[
-            full_df['person1'].isin(train_people) | full_df['person2'].isin(train_people)
-            ]
-
-        val_df = full_df[
-            full_df['person1'].isin(val_people) & full_df['person2'].isin(val_people)
-            ]
+        train_df, val_df = split_pairs_by_connected_components(full_df, val_split=self.config["validation"]["val_split"],
+                                                               random_seed=self.config["validation"]["random_seed"])
 
         train_transforms = self._get_transforms(stage="train")
         val_transforms = self._get_transforms(stage="val")

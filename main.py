@@ -3,7 +3,7 @@ from scripts.test import test_model
 
 
 def main():
-    train_model(run_name="Siamese_Training_With_Adam2")
+    train_model(run_name="Siamese_Training_Temp")
 
 
 if __name__ == "__main__":
