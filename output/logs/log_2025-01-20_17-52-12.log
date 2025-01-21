@@ -1,0 +1,12 @@
+2025-01-20 17:52:12,549 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-20 17:52:12,549 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-20 17:52:12,552 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-20 17:52:12,552 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-20 17:52:12,553 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-20 17:52:12,554 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-20 17:52:12,557 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-20 17:52:12,557 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-20 17:52:12,740 - INFO - Initialized Linear weights with mean=0.0, std=0.2
+2025-01-20 17:52:12,740 - INFO - Initialized Linear bias with mean=0.5, std=0.01
+2025-01-20 17:52:12,741 - INFO - Initialized Linear weights with mean=0.0, std=0.2
+2025-01-20 17:52:12,741 - INFO - Initialized Linear bias with mean=0.5, std=0.01
