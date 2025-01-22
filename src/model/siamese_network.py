@@ -86,7 +86,8 @@ class SiameseNetwork(nn.Module):
                 std=self.init_config['conv_weights']['std']
             )
             self.logger.log_message(
-                f"Initialized Conv2d weights with mean={self.init_config['conv_weights']['mean']}, std={self.init_config['conv_weights']['std']}")
+                f"Initialized Conv2d weights with mean={self.init_config['conv_weights']['mean']}, "
+                f"std={self.init_config['conv_weights']['std']}")
             if module.bias is not None:
                 nn.init.normal_(
                     module.bias,
@@ -94,7 +95,8 @@ class SiameseNetwork(nn.Module):
                     std=self.init_config['conv_biases']['std']
                 )
                 self.logger.log_message(
-                    f"Initialized Conv2d bias with mean={self.init_config['conv_biases']['mean']}, std={self.init_config['conv_biases']['std']}")
+                    f"Initialized Conv2d bias with mean={self.init_config['conv_biases']['mean']}, "
+                    f"std={self.init_config['conv_biases']['std']}")
         elif isinstance(module, nn.Linear):
             nn.init.normal_(
                 module.weight,
@@ -102,7 +104,8 @@ class SiameseNetwork(nn.Module):
                 std=self.init_config['fc_weights']['std']
             )
             self.logger.log_message(
-                f"Initialized Linear weights with mean={self.init_config['fc_weights']['mean']}, std={self.init_config['fc_weights']['std']}")
+                f"Initialized Linear weights with mean={self.init_config['fc_weights']['mean']}, "
+                f"std={self.init_config['fc_weights']['std']}")
             if module.bias is not None:
                 nn.init.normal_(
                     module.bias,
@@ -110,7 +113,8 @@ class SiameseNetwork(nn.Module):
                     std=self.init_config['fc_biases']['std']
                 )
                 self.logger.log_message(
-                    f"Initialized Linear bias with mean={self.init_config['fc_biases']['mean']}, std={self.init_config['fc_biases']['std']}")
+                    f"Initialized Linear bias with mean={self.init_config['fc_biases']['mean']}, "
+                    f"std={self.init_config['fc_biases']['std']}")
 
     def forward(self, x1, x2):
         """
