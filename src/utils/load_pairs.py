@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from typing import List
 
+
 def load_pairs_from_txt_file(file_path: str, data_path: str) -> pd.DataFrame:
     """
     Load image pairs from a text file and return a DataFrame containing the pairs.
@@ -28,7 +29,7 @@ def load_pairs_from_txt_file(file_path: str, data_path: str) -> pd.DataFrame:
         same_pairs_count = int(lines[0].strip())
 
         # Process same-person pairs
-        for line in lines[1:same_pairs_count + 1]:
+        for line in lines[1: same_pairs_count + 1]:
             parts = line.strip().split()
             person_name = parts[0]
             image1_path = os.path.join(data_path, person_name, f"{person_name}_{int(parts[1]):04d}.jpg")
