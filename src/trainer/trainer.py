@@ -7,12 +7,12 @@ from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 from sklearn.metrics import precision_score, recall_score, f1_score
 
-from utils.logger import get_logger
-from utils.load_pairs import load_pairs_from_txt_file
-from utils.train_val_split import split_pairs_by_connected_components
+from src.utils.logger import get_logger
+from src.utils.load_pairs import load_pairs_from_txt_file
+from src.utils.train_val_split import split_pairs_by_connected_components
 
 from data.pairs_dataset import PairsDataset
-from model.siamese_network import SiameseNetwork
+from src.model.siamese_network import SiameseNetwork
 
 
 class Trainer:

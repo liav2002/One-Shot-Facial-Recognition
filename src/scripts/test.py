@@ -2,20 +2,16 @@ import torch
 from torch.utils.data import DataLoader
 from torchvision.transforms import Compose, Resize, ToTensor
 
-from utils.logger import Logger
-from utils.config_loader import load_config
+from src.utils.logger import Logger
+from src.trainer.trainer import Trainer
+from src.utils.config_loader import load_config
 from data.pairs_dataset import PairsDataset
-from config.consts import CONFIG_PATH
-from trainer.trainer import Trainer
+from config.consts import CONFIG_PATH, CHECKPOINT_PATH
 
 
-def test_model(checkpoint_path: str):
+def test_model():
     """
     Test the Siamese Network on the test dataset.
-
-    Args:
-        config_path (str): Path to the YAML configuration file.
-        checkpoint_path (str): Path to the model checkpoint file.
     """
     config = load_config(CONFIG_PATH)
     logger = Logger(config)
@@ -36,8 +32,8 @@ def test_model(checkpoint_path: str):
         shuffle=False
     )
 
-    trainer = Trainer(config_path, logger)
-    trainer.load_checkpoint(checkpoint_path)
+    trainer = Trainer(config)
+    trainer.load_checkpoint(CHECKPOINT_PATH)
 
     # Evaluate Model
     logger.start_run(run_name="Siamese_Testing")

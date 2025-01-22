@@ -6,7 +6,7 @@ from typing import Tuple
 from tabulate import tabulate
 from sklearn.model_selection import train_test_split
 
-from utils.logger import get_logger
+from src.utils.logger import get_logger
 
 
 def split_by_unique_persons(

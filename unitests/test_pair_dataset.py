@@ -2,8 +2,8 @@ import unittest
 from torchvision import transforms
 
 from config.consts import CONFIG_PATH
-from utils.config_loader import load_config
-from utils.load_pairs import load_pairs_from_txt_file
+from src.utils.config_loader import load_config
+from src.utils.load_pairs import load_pairs_from_txt_file
 
 from data.pairs_dataset import PairsDataset
 

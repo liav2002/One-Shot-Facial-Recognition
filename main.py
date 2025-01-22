@@ -1,5 +1,5 @@
-from scripts.train import train_model
-from scripts.test import test_model
+from src.scripts.train import train_model
+from src.scripts.test import test_model
 
 
 def main():

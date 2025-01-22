@@ -1,6 +1,6 @@
-from trainer.trainer import Trainer
-from utils.logger import get_logger
-from utils.config_loader import load_config
+from src.trainer.trainer import Trainer
+from src.utils.logger import get_logger
+from src.utils.config_loader import load_config
 from config.consts import CONFIG_PATH
 
 def train_model(run_name = None):

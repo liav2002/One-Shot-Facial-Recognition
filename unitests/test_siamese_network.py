@@ -1,8 +1,8 @@
 import unittest
 import torch
-from model.siamese_network import SiameseNetwork
+from src.model.siamese_network import SiameseNetwork
 
-from utils.config_loader import load_config
+from src.utils.config_loader import load_config
 from config.consts import CONFIG_PATH
 
 
