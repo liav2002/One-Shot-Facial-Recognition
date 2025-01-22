@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as func
 
 from src.utils.logger import get_logger
 
