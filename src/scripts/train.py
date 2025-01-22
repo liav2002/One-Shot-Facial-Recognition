@@ -3,7 +3,8 @@ from src.utils.logger import get_logger
 from src.utils.config_loader import load_config
 from config.consts import CONFIG_PATH
 
-def train_model(run_name = None):
+
+def train_model(run_name=None):
     """
     Train the Siamese Network using the Trainer class.
     """
