@@ -1,7 +1,6 @@
 import os
 import torch
 import numpy as np
-import torch.tensor
 import torch.nn as nn
 import torch.optim as optim
 from torch.optim import Optimizer
@@ -63,8 +62,8 @@ class Trainer:
         )
 
         self.num_epochs = self.config['training']['num_epochs']
-        self.early_stopping_patience = self.config['training']['early_stopping']['patience']
-        self.early_stopping_delta = self.config['training']['early_stopping']['min_delta']
+        self.early_stopping_patience = int(self.config['training']['early_stopping']['patience'])
+        self.early_stopping_delta = float(self.config['training']['early_stopping']['min_delta'])
         self.checkpoint_dir = self.config['logging']['checkpoint_dir']
         self.best_val_loss = float('inf')
         self.start_epoch = 0
@@ -148,6 +147,12 @@ class Trainer:
         """
         optimizer_name = self.config['training']['optimizer']
         optimizer_params = self.config['training'].get('optimizer_params', {})
+
+        # Ensure all numeric parameters are correctly typed
+        if 'weight_decay' in optimizer_params:
+            optimizer_params['weight_decay'] = float(optimizer_params['weight_decay'])
+        if 'betas' in optimizer_params:
+            optimizer_params['betas'] = tuple(optimizer_params['betas'])
 
         try:
             optimizer_class = getattr(optim, optimizer_name)

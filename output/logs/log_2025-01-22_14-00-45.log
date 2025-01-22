@@ -1,0 +1,27 @@
+2025-01-22 14:00:46,117 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 14:00:46,117 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 14:00:46,120 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 14:00:46,120 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 14:00:46,121 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 14:00:46,121 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 14:00:46,124 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 14:00:46,124 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 14:00:46,311 - INFO - Initialized Linear weights with mean=0.0, std=0.2
+2025-01-22 14:00:46,312 - INFO - Initialized Linear bias with mean=0.5, std=0.01
+2025-01-22 14:00:46,312 - INFO - Initialized Linear weights with mean=0.0, std=0.2
+2025-01-22 14:00:46,312 - INFO - Initialized Linear bias with mean=0.5, std=0.01
+2025-01-22 14:00:47,019 - INFO - Split Results:
+2025-01-22 14:00:47,021 - INFO - 
++-------------------+---------+--------------+
+| Metric            |   Count | Percentage   |
++===================+=========+==============+
+| Train People      |    1520 |              |
++-------------------+---------+--------------+
+| Train Pairs       |    1572 | (71.45%)     |
++-------------------+---------+--------------+
+| Validation People |     612 |              |
++-------------------+---------+--------------+
+| Validation Pairs  |     628 | (28.55%)     |
++-------------------+---------+--------------+
+| Dropped Pairs     |       0 | (0.00%)      |
++-------------------+---------+--------------+

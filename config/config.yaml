@@ -61,12 +61,12 @@ data:
       - type: Resize
         size: [ 105, 105 ]
       - type: RandomHorizontalFlip
-        probability: 0.5
+        p: 0.5
       - type: RandomRotation
         degrees: 10
       - type: RandomAdjustSharpness
         sharpness_factor: 2
-        probability: 0.3
+        p: 0.3
     val:
       - type: Resize
         size: [ 105, 105 ]

@@ -1,0 +1,35 @@
+2025-01-22 14:10:51,386 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 14:10:51,386 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 14:10:51,388 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 14:10:51,389 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 14:10:51,390 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 14:10:51,390 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 14:10:51,393 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 14:10:51,393 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 14:10:51,575 - INFO - Initialized Linear weights with mean=0.0, std=0.2
+2025-01-22 14:10:51,575 - INFO - Initialized Linear bias with mean=0.5, std=0.01
+2025-01-22 14:10:51,575 - INFO - Initialized Linear weights with mean=0.0, std=0.2
+2025-01-22 14:10:51,575 - INFO - Initialized Linear bias with mean=0.5, std=0.01
+2025-01-22 14:10:52,288 - INFO - Split Results:
+2025-01-22 14:10:52,289 - INFO - 
++-------------------+---------+--------------+
+| Metric            |   Count | Percentage   |
++===================+=========+==============+
+| Train People      |    1520 |              |
++-------------------+---------+--------------+
+| Train Pairs       |    1572 | (71.45%)     |
++-------------------+---------+--------------+
+| Validation People |     612 |              |
++-------------------+---------+--------------+
+| Validation Pairs  |     628 | (28.55%)     |
++-------------------+---------+--------------+
+| Dropped Pairs     |       0 | (0.00%)      |
++-------------------+---------+--------------+
+2025-01-22 14:10:52,289 - INFO - Data prepared: 1572 training pairs, 628 validation pairs.
+2025-01-22 14:10:52,289 - INFO - nn.BCELoss function defined as loss function.
+2025-01-22 14:10:52,289 - INFO - Adam optimizer initialized with parameters: {'betas': (0.9, 0.999), 'weight_decay': 1e-05}
+2025-01-22 14:10:54,957 - INFO - Epoch 1, Batch 5: Loss = 0.7491, Accuracy = 0.5000
+2025-01-22 14:10:56,621 - INFO - Epoch 1, Batch 10: Loss = 0.7272, Accuracy = 0.4906
+2025-01-22 14:10:57,538 - INFO - Epoch 1: AUC = 0.5016
+2025-01-22 14:10:58,442 - INFO - Validation: Loss = 0.7265, Accuracy = 0.5239, Precision = 0.5417, Recall = 0.5200, F1 = 0.5306
+2025-01-22 14:10:58,447 - INFO - Epoch 1/200: Train Loss = 0.7403, Val Loss = 0.7265

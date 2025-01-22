@@ -1,0 +1,30 @@
+2025-01-22 14:10:45,448 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 14:10:45,448 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 14:10:45,451 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 14:10:45,451 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 14:10:45,452 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 14:10:45,452 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 14:10:45,455 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 14:10:45,455 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 14:10:45,639 - INFO - Initialized Linear weights with mean=0.0, std=0.2
+2025-01-22 14:10:45,640 - INFO - Initialized Linear bias with mean=0.5, std=0.01
+2025-01-22 14:10:45,640 - INFO - Initialized Linear weights with mean=0.0, std=0.2
+2025-01-22 14:10:45,640 - INFO - Initialized Linear bias with mean=0.5, std=0.01
+2025-01-22 14:10:46,391 - INFO - Split Results:
+2025-01-22 14:10:46,392 - INFO - 
++-------------------+---------+--------------+
+| Metric            |   Count | Percentage   |
++===================+=========+==============+
+| Train People      |    1520 |              |
++-------------------+---------+--------------+
+| Train Pairs       |    1572 | (71.45%)     |
++-------------------+---------+--------------+
+| Validation People |     612 |              |
++-------------------+---------+--------------+
+| Validation Pairs  |     628 | (28.55%)     |
++-------------------+---------+--------------+
+| Dropped Pairs     |       0 | (0.00%)      |
++-------------------+---------+--------------+
+2025-01-22 14:10:46,393 - INFO - Data prepared: 1572 training pairs, 628 validation pairs.
+2025-01-22 14:10:46,393 - INFO - nn.BCELoss function defined as loss function.
+2025-01-22 14:10:46,393 - INFO - Adam optimizer initialized with parameters: {'betas': (0.9, 0.999), 'weight_decay': 1e-05}

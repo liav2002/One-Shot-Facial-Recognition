@@ -42,9 +42,13 @@ class Logger:
         if self.mlflow_run:
             mlflow.log_params(params)
 
-    def log_artifacts(self, artifact_path: str):
+    def log_artifact(self, artifact_file_path: str):
         if self.mlflow_run:
-            mlflow.log_artifacts(artifact_path)
+            mlflow.log_artifact(artifact_file_path)
+
+    def log_artifacts(self, artifact_dir_path: str):
+        if self.mlflow_run:
+            mlflow.log_artifacts(artifact_dir_path)
 
     def log_message(self, message: str, level: str = "info"):
         log_method = getattr(self.logger, level.lower(), self.logger.info)
