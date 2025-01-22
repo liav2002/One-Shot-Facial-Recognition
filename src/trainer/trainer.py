@@ -274,8 +274,7 @@ class Trainer:
         Train the model for one epoch.
 
         This function performs a single training epoch, including forward pass, loss computation,
-        backpropagation, and optimizer updates. It computes the ROC curve and AUC score and logs them
-        along with metrics and a graph using the existing logger.
+        backpropagation, and optimizer updates. It also logs progress and metrics.
 
         Args:
             epoch (int): The current epoch number.
@@ -285,8 +284,8 @@ class Trainer:
         """
         self.model.train()
         running_loss = 0.0
-        all_labels = []
-        all_outputs = []
+        correct = 0
+        total = 0
 
         for batch_idx, batch in enumerate(self.train_loader, start=1):
             (img1, img2), labels = batch
@@ -299,41 +298,22 @@ class Trainer:
             self.optimizer.step()
 
             running_loss += loss.item()
-            all_labels.extend(labels.cpu().numpy())
-            all_outputs.extend(outputs.detach().cpu().numpy())
+            predictions = (outputs > 0.5).long()
+            correct += (predictions == labels).sum().item()
+            total += labels.size(0)
 
             if batch_idx % self.logger.log_interval == 0:
-                threshold = 0.5
-                predictions = (np.array(all_outputs) > threshold).astype(int)
-                accuracy = (np.array(predictions) == np.array(all_labels)).mean()
+                accuracy = correct / total
                 self.logger.log_message(
-                    f"Epoch {epoch}, Batch {batch_idx}: Loss = {loss.item():.4f}, Accuracy = {accuracy:.4f}"
-                )
+                    f"Epoch {epoch}, Batch {batch_idx}: Loss = {loss.item():.4f}, Accuracy = {accuracy:.4f}")
 
-        fpr, tpr, thresholds = roc_curve(all_labels, all_outputs)
-        auc_score = roc_auc_score(all_labels, all_outputs)
-
-        plt.figure()
-        plt.plot(fpr, tpr, label=f"ROC Curve (AUC = {auc_score:.4f})")
-        plt.xlabel("False Positive Rate")
-        plt.ylabel("True Positive Rate")
-        plt.title(f"ROC Curve - Epoch {epoch}")
-        plt.legend(loc="lower right")
-        plt.grid()
-
-        roc_curve_path = f"output/plots/roc_curve_epoch_{epoch}.png"
-        plt.savefig(roc_curve_path)
-        plt.close()
-
+        self.scheduler.step()
         train_loss = running_loss / len(self.train_loader)
+        train_accuracy = correct / total
         self.logger.log_metrics({
             "train_loss": train_loss,
-            "train_auc": auc_score
+            "train_accuracy": train_accuracy
         }, step=epoch)
-        self.logger.log_artifact(roc_curve_path)
-
-        self.logger.log_message(f"Epoch {epoch}: AUC = {auc_score:.4f}")
-
         return train_loss
 
     def validate(self, epoch: int) -> float:
