@@ -1,6 +1,10 @@
 .idea/
 temp/
 data/__pycache__/
+data/lfw2/
+data/pairsDevTest.txt
+data/pairsDevTrain.txt
+data/Text_File_Structure_Description.pdf
 notebooks/.ipynb_checkpoints/
 unitests/.pytest_cache/
 unitests/__pycache__/
