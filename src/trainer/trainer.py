@@ -9,7 +9,6 @@ import torchvision.transforms as transforms
 from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.metrics import roc_curve, roc_auc_score
 from typing import Union, Callable
-import matplotlib.pyplot as plt
 
 from src.utils.logger import get_logger
 from src.utils.load_pairs import load_pairs_from_txt_file
