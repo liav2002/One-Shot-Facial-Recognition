@@ -1,14 +1,10 @@
+**/.ipynb_checkpoints/
+**/.pytest_cache/
+**/__pycache__/
 .idea/
 temp/
 config/__pycache__/
 data/__pycache__/
 data/lfw2/
-notebooks/.ipynb_checkpoints/
-unitests/.pytest_cache/
-unitests/__pycache__/
-src/utils/__pycache__/
-src/model/__pycache__/
-src/scripts/__pycache__/
-src/trainer/__pycache__/
 mlruns/
 output/checkpoints
