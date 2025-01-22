@@ -36,7 +36,7 @@ class Trainer:
         self.best_val_loss = float('inf')
         self.start_epoch = 0
 
-    def _get_transforms(self, stage: str):
+    def _get_transforms(self, stage: str) -> transforms.Compose:
         """
         Define and return image transformations based on the configuration.
 
@@ -47,23 +47,17 @@ class Trainer:
             torchvision.transforms.Compose: Composed transformations.
         """
         transform_list = []
+
         for transform_config in self.config['data']['transformations'][stage]:
             transform_type = transform_config['type']
-            if transform_type == "Resize":
-                transform_list.append(transforms.Resize(transform_config['size']))
-            elif transform_type == "RandomHorizontalFlip":
-                transform_list.append(transforms.RandomHorizontalFlip(p=transform_config['probability']))
-            elif transform_type == "RandomRotation":
-                transform_list.append(transforms.RandomRotation(degrees=transform_config['degrees']))
-            elif transform_type == "RandomAdjustSharpness":
-                transform_list.append(transforms.RandomAdjustSharpness(
-                    sharpness_factor=transform_config['sharpness_factor'],
-                    p=transform_config['probability']
-                ))
-            elif transform_type == "ToTensor":
-                transform_list.append(transforms.ToTensor())
-            else:
+            transform_params = {k: v for k, v in transform_config.items() if k != 'type'}
+            try:
+                transform_class = getattr(transforms, transform_type)
+                transform_list.append(transform_class(**transform_params))
+            except AttributeError:
                 raise ValueError(f"Unsupported transform type: {transform_type}")
+
+        transform_list.append(transforms.ToTensor())
 
         return transforms.Compose(transform_list)
 

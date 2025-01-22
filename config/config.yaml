@@ -66,11 +66,9 @@ data:
       - type: RandomAdjustSharpness
         sharpness_factor: 2
         probability: 0.3
-      - type: ToTensor
     val:
       - type: Resize
         size: [ 105, 105 ]
-      - type: ToTensor
 
 logging:
   mlflow_experiment: siamese_one_shot
