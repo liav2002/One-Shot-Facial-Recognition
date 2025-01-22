@@ -1,9 +1,27 @@
 import os
 import pandas as pd
+from typing import List
 
+def load_pairs_from_txt_file(file_path: str, data_path: str) -> pd.DataFrame:
+    """
+    Load image pairs from a text file and return a DataFrame containing the pairs.
 
-def load_pairs_from_txt_file(file_path, data_path):
-    pairs = []
+    The function processes pairs of images labeled as either the same person or different persons.
+    It constructs file paths for the images based on the provided data path and the contents of the text file.
+
+    Args:
+        file_path (str): The path to the text file containing image pair information.
+        data_path (str): The root directory containing the image folders.
+
+    Returns:
+        pd.DataFrame: A DataFrame with the following columns:
+            - person1 (str): Name of the first person.
+            - image1_path (str): File path to the first image.
+            - person2 (str): Name of the second person.
+            - image2_path (str): File path to the second image.
+            - is_same (int): 1 if the pair is the same person, 0 otherwise.
+    """
+    pairs: List[dict] = []
 
     with open(file_path, 'r') as file:
         lines = file.readlines()
