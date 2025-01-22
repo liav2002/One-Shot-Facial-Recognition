@@ -210,7 +210,7 @@ class Trainer:
         l2_reg = torch.tensor(0., requires_grad=True).to(self.device)
         for param in self.model.parameters():
             l2_reg = l2_reg + torch.norm(param, 2)
-        return -cross_entropy.mean() + self.config['training']['weight_decay'] * l2_reg
+        return -cross_entropy.mean() + self.config['training']['optimizer_params']['weight_decay'] * l2_reg
 
     def save_checkpoint(self, epoch: int, path: str) -> None:
         """
