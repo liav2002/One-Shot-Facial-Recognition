@@ -4,8 +4,8 @@ import numpy as np
 import torch.tensor
 import torch.nn as nn
 import torch.optim as optim
+from torch.optim import Optimizer
 from torch.utils.data import DataLoader
-from torch.optim.optimizer import Optimizer
 import torchvision.transforms as transforms
 from sklearn.metrics import precision_score, recall_score, f1_score
 from typing import Union, Callable
@@ -133,34 +133,28 @@ class Trainer:
 
     def _initialize_optimizer(self) -> Optimizer:
         """
-        Initialize and return the optimizer based on the configuration.
+        Dynamically initialize and return the optimizer based on the configuration.
 
-        This function sets up the optimizer for training based on the specified parameters in the configuration.
-        Currently, it supports SGD and Adam optimizers.
-
-        Args:
-            None
+        This function reads the optimizer type and all parameters from the configuration file
+        and dynamically sets up the specified optimizer without hardcoding.
 
         Returns:
-            Optimizer: An instance of the selected optimizer (`torch.optim.SGD` or `torch.optim.Adam`).
+            Optimizer: An instance of the specified optimizer.
 
         Raises:
-            ValueError: If the optimizer specified in the configuration is not supported.
+            ValueError: If the specified optimizer is not found in `torch.optim`.
         """
         optimizer_name = self.config['training']['optimizer']
-        learning_rate = self.config['training']['learning_rate']
-        momentum = self.config['training']['momentum']
-        weight_decay = self.config['training']['weight_decay']
-        if optimizer_name == "SGD":
-            self.logger.log_message(
-                f"SGD optimizer defined with lr={learning_rate}, momentum={momentum}, weight_decay={weight_decay}")
-            return optim.SGD(self.model.parameters(), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
-        elif optimizer_name == "Adam":
-            self.logger.log_message(
-                f"Adam optimizer defined with lr={learning_rate}, weight_decay={weight_decay}")
-            return optim.Adam(self.model.parameters(), lr=learning_rate, weight_decay=weight_decay)
-        else:
+        optimizer_params = self.config['training'].get('optimizer_params', {})
+
+        try:
+            optimizer_class = getattr(optim, optimizer_name)
+            self.logger.log_message(f"{optimizer_name} optimizer initialized with parameters: {optimizer_params}")
+            return optimizer_class(self.model.parameters(), **optimizer_params)
+        except AttributeError:
             raise ValueError(f"Unsupported optimizer: {optimizer_name}")
+        except TypeError as e:
+            raise ValueError(f"Error initializing optimizer {optimizer_name}: {e}")
 
     def _initialize_loss_function(self) -> Callable:
         """
