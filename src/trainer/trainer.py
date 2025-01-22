@@ -152,6 +152,8 @@ class Trainer:
             optimizer_params['weight_decay'] = float(optimizer_params['weight_decay'])
         if 'betas' in optimizer_params:
             optimizer_params['betas'] = tuple(optimizer_params['betas'])
+        if 'lr' in optimizer_params:
+            optimizer_params['lr'] = float(optimizer_params['lr'])
 
         try:
             optimizer_class = getattr(optim, optimizer_name)
