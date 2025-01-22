@@ -112,14 +112,14 @@ def split_pairs_by_connected_components(
     random.seed(random_seed)
 
     # Create graph where nodes are people and edges represent connections between people
-    G = nx.Graph()
+    graph = nx.Graph()
 
     # Add edges for all pairs in the dataframe
     for _, row in full_df.iterrows():
-        G.add_edge(row['person1'], row['person2'])
+        graph.add_edge(row['person1'], row['person2'])
 
     # Get connected components (groups of connected people)
-    connected_components = list(nx.connected_components(G))
+    connected_components = list(nx.connected_components(graph))
 
     # Shuffle the components to ensure randomness
     random.shuffle(connected_components)
