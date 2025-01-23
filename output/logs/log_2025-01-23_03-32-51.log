@@ -1,0 +1,33 @@
+2025-01-23 03:32:52,040 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-23 03:32:52,040 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-23 03:32:52,041 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-23 03:32:52,041 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-23 03:32:52,042 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-23 03:32:52,042 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-23 03:32:52,043 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-23 03:32:52,043 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-23 03:32:52,143 - INFO - Initialized Linear weights with mean=0.0, std=0.2
+2025-01-23 03:32:52,143 - INFO - Initialized Linear bias with mean=0.5, std=0.01
+2025-01-23 03:32:52,143 - INFO - Initialized Linear weights with mean=0.0, std=0.2
+2025-01-23 03:32:52,143 - INFO - Initialized Linear bias with mean=0.5, std=0.01
+2025-01-23 03:32:52,747 - INFO - Split Results:
+2025-01-23 03:32:52,748 - INFO - 
++-------------------+---------+--------------+
+| Metric            |   Count | Percentage   |
++===================+=========+==============+
+| Train People      |    1520 |              |
++-------------------+---------+--------------+
+| Train Pairs       |    1572 | (71.45%)     |
++-------------------+---------+--------------+
+| Validation People |     612 |              |
++-------------------+---------+--------------+
+| Validation Pairs  |     628 | (28.55%)     |
++-------------------+---------+--------------+
+| Dropped Pairs     |       0 | (0.00%)      |
++-------------------+---------+--------------+
+2025-01-23 03:32:52,748 - INFO - Data prepared: 1572 training pairs, 628 validation pairs.
+2025-01-23 03:32:52,748 - INFO - _regularized_loss function defined as loss function.
+2025-01-23 03:32:52,749 - INFO - Adam optimizer initialized with parameters: {'lr': 1e-05, 'betas': (0.9, 0.999), 'weight_decay': 1e-05}
+2025-01-23 03:32:52,919 - INFO - Checkpoint loaded from ./output/checkpoints/best_model.pth. Resuming from epoch 64.
+2025-01-23 03:32:54,806 - INFO - Test Loss: 0.6109, Test Accuracy: 0.6860
+2025-01-23 03:32:54,806 - INFO - Precision: 0.6782, Recall: 0.7080, F1 Score: 0.6928
