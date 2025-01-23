@@ -154,7 +154,7 @@ class Trainer:
             optimizer_params['betas'] = tuple(optimizer_params['betas'])
         if 'lr' in optimizer_params:
             optimizer_params['lr'] = float(optimizer_params['lr'])
-        if 'lr' in optimizer_params:
+        if 'momentum' in optimizer_params:
             optimizer_params['momentum'] = float(optimizer_params['momentum'])
 
         try:
