@@ -3,7 +3,7 @@ from src.scripts.test import test_model
 
 
 def main():
-    train_model(run_name="Siamese_Training_Temp")
+    train_model(run_name="Siamese_Last_Train_Best_Params_BCE_Accuracy_Greedy")
 
 
 if __name__ == "__main__":

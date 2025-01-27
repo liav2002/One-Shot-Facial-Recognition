@@ -15,6 +15,7 @@ class SiameseNetwork(nn.Module):
         super(SiameseNetwork, self).__init__()
 
         self.logger = get_logger()
+        self.logger.log_message("\n")
 
         cnn_config = config['model']['cnn_layers']
         input_size = config['model']['input_size']
@@ -79,42 +80,72 @@ class SiameseNetwork(nn.Module):
         Args:
             module (nn.Module): The layer to initialize.
         """
+        method = self.init_config.get('method')
+
+        if method is None:
+            raise ValueError("Initialization method must be specified in the configuration!")
+
         if isinstance(module, nn.Conv2d):
-            nn.init.normal_(
-                module.weight,
-                mean=self.init_config['conv_weights']['mean'],
-                std=self.init_config['conv_weights']['std']
-            )
-            self.logger.log_message(
-                f"Initialized Conv2d weights with mean={self.init_config['conv_weights']['mean']}, "
-                f"std={self.init_config['conv_weights']['std']}")
-            if module.bias is not None:
+            if method == 'xavier':
+                nn.init.xavier_normal_(module.weight)
+                self.logger.log_message(f"Initialized Conv2d weights with Xavier initialization.")
+            elif method == 'normal':
+                params = self.init_config.get('normal_params')
+                if params is None:
+                    raise ValueError("normal_params must be defined in the configuration for normal initialization!")
+
                 nn.init.normal_(
-                    module.bias,
-                    mean=self.init_config['conv_biases']['mean'],
-                    std=self.init_config['conv_biases']['std']
+                    module.weight,
+                    mean=params['conv_weights']['mean'],
+                    std=params['conv_weights']['std']
                 )
                 self.logger.log_message(
-                    f"Initialized Conv2d bias with mean={self.init_config['conv_biases']['mean']}, "
-                    f"std={self.init_config['conv_biases']['std']}")
+                    f"Initialized Conv2d weights with mean={params['conv_weights']['mean']}, "
+                    f"std={params['conv_weights']['std']}."
+                )
+                if module.bias is not None:
+                    nn.init.normal_(
+                        module.bias,
+                        mean=params['conv_biases']['mean'],
+                        std=params['conv_biases']['std']
+                    )
+                    self.logger.log_message(
+                        f"Initialized Conv2d bias with mean={params['conv_biases']['mean']}, "
+                        f"std={params['conv_biases']['std']}."
+                    )
+            else:
+                raise ValueError(f"Unsupported initialization method: {method}")
+
         elif isinstance(module, nn.Linear):
-            nn.init.normal_(
-                module.weight,
-                mean=self.init_config['fc_weights']['mean'],
-                std=self.init_config['fc_weights']['std']
-            )
-            self.logger.log_message(
-                f"Initialized Linear weights with mean={self.init_config['fc_weights']['mean']}, "
-                f"std={self.init_config['fc_weights']['std']}")
-            if module.bias is not None:
+            if method == 'xavier':
+                nn.init.xavier_normal_(module.weight)
+                self.logger.log_message(f"Initialized Linear weights with Xavier initialization.")
+            elif method == 'normal':
+                params = self.init_config.get('normal_params')
+                if params is None:
+                    raise ValueError("normal_params must be defined in the configuration for normal initialization!")
+
                 nn.init.normal_(
-                    module.bias,
-                    mean=self.init_config['fc_biases']['mean'],
-                    std=self.init_config['fc_biases']['std']
+                    module.weight,
+                    mean=params['fc_weights']['mean'],
+                    std=params['fc_weights']['std']
                 )
                 self.logger.log_message(
-                    f"Initialized Linear bias with mean={self.init_config['fc_biases']['mean']}, "
-                    f"std={self.init_config['fc_biases']['std']}")
+                    f"Initialized Linear weights with mean={params['fc_weights']['mean']}, "
+                    f"std={params['fc_weights']['std']}."
+                )
+                if module.bias is not None:
+                    nn.init.normal_(
+                        module.bias,
+                        mean=params['fc_biases']['mean'],
+                        std=params['fc_biases']['std']
+                    )
+                    self.logger.log_message(
+                        f"Initialized Linear bias with mean={params['fc_biases']['mean']}, "
+                        f"std={params['fc_biases']['std']}."
+                    )
+            else:
+                raise ValueError(f"Unsupported initialization method: {method}")
 
     def forward(self, x1, x2):
         """
