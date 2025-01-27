@@ -308,6 +308,7 @@ class Trainer:
         if not os.path.exists(path):
             raise FileNotFoundError(f"Checkpoint not found at {path}")
         checkpoint = torch.load(path, map_location=self.device)
+        self._update_attributes_from_config()
         self.model.load_state_dict(checkpoint["model_state_dict"])
         self.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
         self.scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
