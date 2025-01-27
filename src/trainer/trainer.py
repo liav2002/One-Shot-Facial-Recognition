@@ -9,7 +9,7 @@ from torch.optim import Optimizer
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 from sklearn.metrics import precision_score, recall_score, f1_score
-from typing import Callable
+from typing import Callable, Tuple
 
 from src.utils.logger import get_logger
 from src.utils.load_pairs import load_pairs_from_txt_file
@@ -44,7 +44,7 @@ class Trainer:
         self.early_stopping_patience = int(self.config['training']['early_stopping']['patience'])
         self.early_stopping_delta = float(self.config['training']['early_stopping']['min_delta'])
         self.checkpoint_dir = self.config['logging']['checkpoint_dir']
-        self.best_val_loss = float('inf')
+        self.best_val_accuracy = 0
         self.start_epoch = 0
         self.log_to_mlflow = False
 
@@ -282,7 +282,7 @@ class Trainer:
             "optimizer_state_dict": self.optimizer.state_dict(),
             "scheduler_state_dict": self.scheduler.state_dict(),
             "epoch": epoch,
-            "best_val_loss": self.best_val_loss,
+            "best_val_accuracy": self.best_val_accuracy,
         }
         os.makedirs(os.path.dirname(path), exist_ok=True)
         torch.save(checkpoint, path)
@@ -312,7 +312,7 @@ class Trainer:
         self.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
         self.scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
         self.start_epoch = checkpoint["epoch"]
-        self.best_val_loss = checkpoint["best_val_loss"]
+        self.best_val_accuracy = checkpoint["best_val_accuracy"]
         self.logger.log_message(f"Checkpoint loaded from {path}. Resuming from epoch {self.start_epoch + 1}.")
 
     def run_bayesian_search(self):
@@ -396,14 +396,15 @@ class Trainer:
 
         for epoch in range(self.start_epoch + 1, self.num_epochs + 1):
             train_loss = self.train_one_epoch(epoch)
-            val_loss = self.validate(epoch)
+            val_loss, val_accuracy = self.validate(epoch)
 
             self.logger.log_message(
-                f"Epoch {epoch}/{self.num_epochs}: Train Loss = {train_loss:.4f}, Val Loss = {val_loss:.4f}"
+                f"Epoch {epoch}/{self.num_epochs} Summary: Train Loss = {train_loss:.4f}, Val Loss = {val_loss:.4f}, "
+                f"Val Accuracy = {val_accuracy: .4f}"
             )
 
-            if val_loss < self.best_val_loss - self.early_stopping_delta:
-                self.best_val_loss = val_loss
+            if val_accuracy > self.best_val_accuracy + self.early_stopping_delta:
+                self.best_val_accuracy = val_accuracy
                 patience_counter = 0
                 self.save_checkpoint(epoch, f"{self.checkpoint_dir}/best_model.pth")
             else:
@@ -463,7 +464,7 @@ class Trainer:
 
         return train_loss
 
-    def validate(self, epoch: int) -> float:
+    def validate(self, epoch: int) -> Tuple[float, float]:
         """
         Validate the model on the validation dataset.
 
@@ -475,7 +476,7 @@ class Trainer:
             epoch (int): The current epoch number.
 
         Returns:
-            float: The average validation loss for the epoch.
+            float: The average validation loss for the epoch and validation accuracy.
         """
         self.model.eval()
         val_loss = 0.0
@@ -514,7 +515,7 @@ class Trainer:
                 "val_f1": f1
             }, step=epoch)
 
-        return val_loss
+        return val_loss, accuracy
 
     def train(self):
         """
