@@ -347,16 +347,16 @@ class Trainer:
             self._update_attributes_from_config()
 
             # Implement early stopping for Bayesian search
-            best_val_loss = float('inf')
+            best_val_accuracy = 0
             patience_counter = 0
 
             for epoch in range(1, half_epochs + 1):
                 self.train_one_epoch(epoch)
-                val_loss = self.validate(epoch)
+                val_loss, val_accuracy = self.validate(epoch)
 
                 # Check early stopping condition
-                if val_loss < best_val_loss - self.early_stopping_delta:
-                    best_val_loss = val_loss
+                if val_accuracy > best_val_accuracy + self.early_stopping_delta:
+                    best_val_accuracy = val_accuracy
                     patience_counter = 0
                 else:
                     patience_counter += 1
@@ -364,12 +364,12 @@ class Trainer:
                         self.logger.log_message("Early stopping triggered during Bayesian search.")
                         break
 
-            return best_val_loss
+            return best_val_accuracy
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", category=UserWarning)
             # noinspection PyArgumentList
-            study = optuna.create_study(direction='minimize')
+            study = optuna.create_study(direction='maximize')
             study.optimize(objective, n_trials=self.config['training']['hyperparameter_tuning']['num_trials'])
 
         best_params = study.best_params
