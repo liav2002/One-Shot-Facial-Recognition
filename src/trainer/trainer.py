@@ -1,5 +1,7 @@
 import os
 import torch
+import optuna
+import warnings
 import numpy as np
 import torch.nn as nn
 import torch.optim as optim
@@ -7,11 +9,11 @@ from torch.optim import Optimizer
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 from sklearn.metrics import precision_score, recall_score, f1_score
-from sklearn.metrics import roc_curve, roc_auc_score
-from typing import Union, Callable
+from typing import Callable
 
 from src.utils.logger import get_logger
 from src.utils.load_pairs import load_pairs_from_txt_file
+from src.utils.parser import parse_search_space, parse_hyperparameters
 from src.utils.train_val_split import split_pairs_by_connected_components
 
 from data.pairs_dataset import PairsDataset
@@ -32,33 +34,11 @@ class Trainer:
                 - 'training': Training parameters (e.g., learning rate, number of epochs, early stopping).
                 - 'data': Data-related configurations (e.g., paths to datasets, transformations).
                 - 'logging': Logging configurations (e.g., checkpoint directory, log intervals).
-
-        Attributes:
-            logger (Logger): Logger instance for recording messages and metrics.
-            config (dict): The configuration dictionary passed to the constructor.
-            device (torch.device): The device used for computation (CPU or GPU).
-            model (nn.Module): The Siamese Network initialized and moved to the appropriate device.
-            loss_fn (Callable): The loss function for training.
-            optimizer (Optimizer): The optimizer for updating model parameters.
-            scheduler (lr_scheduler): The learning rate scheduler.
-            num_epochs (int): The total number of training epochs.
-            early_stopping_patience (int): The number of epochs to wait before triggering early stopping.
-            early_stopping_delta (float): The minimum improvement in validation loss required to reset patience.
-            checkpoint_dir (str): Directory where model checkpoints are saved.
-            best_val_loss (float): Tracks the best validation loss achieved.
-            start_epoch (int): The epoch from which training will resume (used for checkpointing).
         """
-        self.logger = get_logger()
         self.config = config
+        self._validate_config()
+        self.logger = get_logger()
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = SiameseNetwork(self.config).to(self.device)
-        self._prepare_data()
-
-        self.loss_fn = self._initialize_loss_function()
-        self.optimizer = self._initialize_optimizer()
-        self.scheduler = optim.lr_scheduler.ExponentialLR(
-            self.optimizer, gamma=self.config['training']['learning_rate_decay']
-        )
 
         self.num_epochs = self.config['training']['num_epochs']
         self.early_stopping_patience = int(self.config['training']['early_stopping']['patience'])
@@ -66,6 +46,57 @@ class Trainer:
         self.checkpoint_dir = self.config['logging']['checkpoint_dir']
         self.best_val_loss = float('inf')
         self.start_epoch = 0
+        self.log_to_mlflow = False
+
+    def _update_attributes_from_config(self):
+        """
+        Update class attributes based on the current configuration.
+
+        This method ensures that the model, optimizer, loss function, scheduler,
+        and data loaders are consistent with the current state of `self.config`.
+        """
+        # Initialize model
+        self.model = SiameseNetwork(self.config).to(self.device)
+
+        # Prepare data loaders
+        self._prepare_data()
+
+        # Initialize loss function
+        self.loss_fn = self._initialize_loss_function()
+
+        # Initialize optimizer
+        self.optimizer = self._initialize_optimizer()
+
+        # Initialize scheduler
+        self.scheduler = optim.lr_scheduler.ExponentialLR(
+            self.optimizer, gamma=self.config['training']['learning_rate_decay']
+        )
+
+        self.logger.log_message("Trainer attributes updated from configuration.")
+
+    def _validate_config(self):
+        """
+        Validate that the required configuration keys are present.
+        """
+        required_keys = [
+            'training.hyperparameter_tuning.enabled',
+            'training.hyperparameter_tuning.method',
+            'training.hyperparameter_tuning.num_trials',
+            'training.hyperparameter_tuning.search_space',
+            'training.num_epochs',
+            'training.optimizer',
+            'training.optimizer_params',
+            'training.loss_function',
+            'training.early_stopping'
+        ]
+
+        for key in required_keys:
+            keys = key.split(".")
+            value = self.config
+            for k in keys:
+                if k not in value:
+                    raise ValueError(f"Missing required configuration key: {key}")
+                value = value[k]
 
     def _get_transforms(self, stage: str) -> transforms.Compose:
         """
@@ -99,19 +130,14 @@ class Trainer:
         This function loads the image pairs from the specified text file, splits the pairs into training
         and validation sets, applies the appropriate transformations, and initializes the data loaders
         for both sets.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
         full_df = load_pairs_from_txt_file(
             self.config['data']['train_pairs_path'],
             self.config['data']['lfw_data_path']
         )
 
-        train_df, val_df = split_pairs_by_connected_components(full_df, val_split=self.config["validation"]["val_split"],
+        train_df, val_df = split_pairs_by_connected_components(full_df,
+                                                               val_split=self.config["validation"]["val_split"],
                                                                random_seed=self.config["validation"]["random_seed"])
 
         train_transforms = self._get_transforms(stage="train")
@@ -129,14 +155,16 @@ class Trainer:
             shuffle=False
         )
 
-        self.logger.log_message(f"Data prepared: {len(train_df)} training pairs, {len(val_df)} validation pairs.")
+        self.logger.log_message(
+            f"Data prepared: {len(train_df)} training pairs, {len(val_df)} validation pairs "
+            f"(Batch Size = {self.config['training']['batch_size']}).")
 
     def _initialize_optimizer(self) -> Optimizer:
         """
         Dynamically initialize and return the optimizer based on the configuration.
 
-        This function reads the optimizer type and all parameters from the configuration file
-        and dynamically sets up the specified optimizer without hardcoding.
+        This function reads the optimizer type and dynamically sets up the specified optimizer
+        with only the parameters relevant to it.
 
         Returns:
             Optimizer: An instance of the specified optimizer.
@@ -147,20 +175,35 @@ class Trainer:
         optimizer_name = self.config['training']['optimizer']
         optimizer_params = self.config['training'].get('optimizer_params', {})
 
-        # Ensure all numeric parameters are correctly typed
-        if 'weight_decay' in optimizer_params:
-            optimizer_params['weight_decay'] = float(optimizer_params['weight_decay'])
-        if 'betas' in optimizer_params:
-            optimizer_params['betas'] = tuple(optimizer_params['betas'])
-        if 'lr' in optimizer_params:
-            optimizer_params['lr'] = float(optimizer_params['lr'])
-        if 'momentum' in optimizer_params:
-            optimizer_params['momentum'] = float(optimizer_params['momentum'])
+        # Mapping of optimizers to their expected parameters
+        valid_params = {
+            "SGD": ["lr", "momentum", "weight_decay", "nesterov"],
+            "Adam": ["lr", "betas", "eps", "weight_decay", "amsgrad"],
+            "RMSprop": ["lr", "momentum", "alpha", "eps", "weight_decay", "centered"],
+        }
 
         try:
             optimizer_class = getattr(optim, optimizer_name)
-            self.logger.log_message(f"{optimizer_name} optimizer initialized with parameters: {optimizer_params}")
-            return optimizer_class(self.model.parameters(), **optimizer_params)
+            if optimizer_name not in valid_params:
+                raise ValueError(f"Unsupported optimizer: {optimizer_name}")
+
+            # Filter optimizer_params to only include valid parameters for the chosen optimizer
+            filtered_params = {key: optimizer_params[key] for key in valid_params[optimizer_name] if
+                               key in optimizer_params}
+
+            # Ensure numeric parameters are correctly typed
+            if "weight_decay" in filtered_params:
+                filtered_params["weight_decay"] = float(filtered_params["weight_decay"])
+            if "lr" in filtered_params:
+                filtered_params["lr"] = float(filtered_params["lr"])
+            if "momentum" in filtered_params:
+                filtered_params["momentum"] = float(filtered_params["momentum"])
+            if "betas" in filtered_params:
+                filtered_params["betas"] = tuple(filtered_params["betas"])
+
+            self.logger.log_message(f"{optimizer_name} optimizer initialized with parameters: {filtered_params}")
+            return optimizer_class(self.model.parameters(), **filtered_params)
+
         except AttributeError:
             raise ValueError(f"Unsupported optimizer: {optimizer_name}")
         except TypeError as e:
@@ -173,9 +216,6 @@ class Trainer:
         This function sets up the loss function for training based on the specified name
         in the configuration. Supported loss functions include `BinaryCrossEntropy` and
         `RegularizedCrossEntropy`.
-
-        Args:
-            None
 
         Returns:
             Callable: A PyTorch loss function (e.g., `nn.BCELoss`) or a custom-defined callable.
@@ -193,7 +233,7 @@ class Trainer:
         else:
             raise ValueError(f"Unsupported loss function: {loss_function_name}")
 
-    def _regularized_loss(self, outputs: torch.Tensor, labels: torch.Tensor)  -> torch.Tensor:
+    def _regularized_loss(self, outputs: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
         """
         Compute the regularized loss for the model.
 
@@ -214,7 +254,10 @@ class Trainer:
         l2_reg = torch.tensor(0., requires_grad=True).to(self.device)
         for param in self.model.parameters():
             l2_reg = l2_reg + torch.norm(param, 2)
-        return -cross_entropy.mean() + self.config['training']['optimizer_params']['weight_decay'] * l2_reg
+
+        weight_decay = float(self.config['training']['optimizer_params']['weight_decay'])
+
+        return -cross_entropy.mean() + weight_decay * l2_reg
 
     def save_checkpoint(self, epoch: int, path: str) -> None:
         """
@@ -272,6 +315,104 @@ class Trainer:
         self.best_val_loss = checkpoint["best_val_loss"]
         self.logger.log_message(f"Checkpoint loaded from {path}. Resuming from epoch {self.start_epoch + 1}.")
 
+    def run_bayesian_search(self):
+        """
+        Run Bayesian optimization for hyperparameter tuning.
+        """
+        search_space = parse_search_space(self.config['training']['hyperparameter_tuning']['search_space'])
+        half_epochs = max(1, self.num_epochs // 2)
+
+        def objective(trial):
+            val_loss = float('inf')
+
+            params = {
+                "batch_size": trial.suggest_int("batch_size", *search_space['batch_size']),
+                "learning_rate": trial.suggest_float("learning_rate", *search_space['learning_rate'], log=True),
+                "weight_decay": trial.suggest_float("weight_decay", *search_space['weight_decay'], log=True),
+                "betas": trial.suggest_categorical("betas", search_space['betas']),
+                "optimizer": trial.suggest_categorical("optimizer", search_space['optimizer']),
+                "loss_function": trial.suggest_categorical("loss_function", search_space['loss_function'])
+            }
+
+            parsed_params = parse_hyperparameters(params)
+
+            self.config['training']['batch_size'] = parsed_params["batch_size"]
+            self.config['training']['optimizer_params']['lr'] = parsed_params["lr"]
+            self.config['training']['optimizer_params']['weight_decay'] = parsed_params["weight_decay"]
+            self.config['training']['optimizer_params']['betas'] = parsed_params["betas"]
+            self.config['training']['optimizer'] = parsed_params["optimizer"]
+            self.config['training']['loss_function'] = parsed_params["loss_function"]
+
+            # Update trainer attributes based on the new config
+            self._update_attributes_from_config()
+
+            # Implement early stopping for Bayesian search
+            best_val_loss = float('inf')
+            patience_counter = 0
+
+            for epoch in range(1, half_epochs + 1):
+                self.train_one_epoch(epoch)
+                val_loss = self.validate(epoch)
+
+                # Check early stopping condition
+                if val_loss < best_val_loss - self.early_stopping_delta:
+                    best_val_loss = val_loss
+                    patience_counter = 0
+                else:
+                    patience_counter += 1
+                    if patience_counter >= self.early_stopping_patience:
+                        self.logger.log_message("Early stopping triggered during Bayesian search.")
+                        break
+
+            return best_val_loss
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=UserWarning)
+            # noinspection PyArgumentList
+            study = optuna.create_study(direction='minimize')
+            study.optimize(objective, n_trials=self.config['training']['hyperparameter_tuning']['num_trials'])
+
+        best_params = study.best_params
+        self.logger.log_message(f"Best hyperparameters found: {best_params}")
+
+        # Update configuration with the best parameters
+        self.config['training']['batch_size'] = best_params['batch_size']
+        self.config['training']['optimizer_params']['lr'] = best_params['learning_rate']
+        self.config['training']['optimizer_params']['weight_decay'] = best_params['weight_decay']
+        self.config['training']['optimizer_params']['betas'] = best_params['betas']
+        self.config['training']['optimizer'] = best_params['optimizer']
+        self.config['training']['loss_function'] = best_params['loss_function']
+
+        # Train the final model with the best parameters
+        self._train_with_configured_hyperparameters()
+
+    def _train_with_configured_hyperparameters(self):
+        """
+        Train the model using predefined or tuned hyperparameters from the configuration.
+        """
+        self._update_attributes_from_config()
+        self.log_to_mlflow = True  # enable logging of metrics
+        patience_counter = 0
+
+        for epoch in range(self.start_epoch + 1, self.num_epochs + 1):
+            train_loss = self.train_one_epoch(epoch)
+            val_loss = self.validate(epoch)
+
+            self.logger.log_message(
+                f"Epoch {epoch}/{self.num_epochs}: Train Loss = {train_loss:.4f}, Val Loss = {val_loss:.4f}"
+            )
+
+            if val_loss < self.best_val_loss - self.early_stopping_delta:
+                self.best_val_loss = val_loss
+                patience_counter = 0
+                self.save_checkpoint(epoch, f"{self.checkpoint_dir}/best_model.pth")
+            else:
+                patience_counter += 1
+                if patience_counter >= self.early_stopping_patience:
+                    self.logger.log_message("Early stopping triggered.")
+                    break
+        self.log_to_mlflow = False  # disable logging of metrics
+
     def train_one_epoch(self, epoch: int) -> float:
         """
         Train the model for one epoch.
@@ -302,7 +443,7 @@ class Trainer:
 
             running_loss += loss.item()
             predictions = (outputs > 0.5).long()
-            correct += (predictions == labels).sum().item()
+            correct += torch.as_tensor(predictions == labels, dtype=torch.int).sum().item()
             total += labels.size(0)
 
             if batch_idx % self.logger.log_interval == 0:
@@ -313,10 +454,13 @@ class Trainer:
         self.scheduler.step()
         train_loss = running_loss / len(self.train_loader)
         train_accuracy = correct / total
-        self.logger.log_metrics({
-            "train_loss": train_loss,
-            "train_accuracy": train_accuracy
-        }, step=epoch)
+
+        if self.log_to_mlflow:
+            self.logger.log_metrics({
+                "train_loss": train_loss,
+                "train_accuracy": train_accuracy
+            }, step=epoch)
+
         return train_loss
 
     def validate(self, epoch: int) -> float:
@@ -352,46 +496,33 @@ class Trainer:
                 all_predictions.extend(predictions.cpu().numpy())
 
         val_loss /= len(self.val_loader)
-        accuracy = (np.array(all_predictions) == np.array(all_labels)).mean()
+        accuracy = torch.as_tensor(all_predictions == np.array(all_labels), dtype=torch.float).mean().item()
         precision = precision_score(all_labels, all_predictions, zero_division=1)
         recall = recall_score(all_labels, all_predictions, zero_division=1)
         f1 = f1_score(all_labels, all_predictions, zero_division=1)
 
         self.logger.log_message(
-            f"Validation: Loss = {val_loss:.4f}, Accuracy = {accuracy:.4f}, Precision = {precision:.4f}, Recall = {recall:.4f}, F1 = {f1:.4f}")
-        self.logger.log_metrics({
-            "val_loss": val_loss,
-            "val_accuracy": accuracy,
-            "val_precision": precision,
-            "val_recall": recall,
-            "val_f1": f1
-        }, step=epoch)
+            f"Validation: Loss = {val_loss:.4f}, Accuracy = {accuracy:.4f}, Precision = {precision:.4f}, Recall = "
+            f"{recall:.4f}, F1 = {f1:.4f}")
+
+        if self.log_to_mlflow:
+            self.logger.log_metrics({
+                "val_loss": val_loss,
+                "val_accuracy": accuracy,
+                "val_precision": precision,
+                "val_recall": recall,
+                "val_f1": f1
+            }, step=epoch)
+
         return val_loss
 
     def train(self):
         """
-        Train the model with early stopping and checkpoint saving.
-
-        This function manages the training process over multiple epochs. It tracks training
-        and validation losses, implements early stopping based on validation performance,
-        and saves the best model checkpoint when validation loss improves.
+        Train the model, optionally using Bayesian hyperparameter tuning.
         """
-        patience_counter = 0
-
-        for epoch in range(self.start_epoch + 1, self.num_epochs + 1):
-            train_loss = self.train_one_epoch(epoch)
-            val_loss = self.validate(epoch)
-
-            self.logger.log_message(
-                f"Epoch {epoch}/{self.num_epochs}: Train Loss = {train_loss:.4f}, Val Loss = {val_loss:.4f}")
-
-            if val_loss < self.best_val_loss - self.early_stopping_delta:
-                self.best_val_loss = val_loss
-                patience_counter = 0
-                self.save_checkpoint(epoch, f"{self.checkpoint_dir}/best_model.pth")
-                self.logger.log_message(f"Model improved at epoch {epoch}. Checkpoint saved.")
-            else:
-                patience_counter += 1
-                if patience_counter >= self.early_stopping_patience:
-                    self.logger.log_message("Early stopping triggered.")
-                    break
+        if self.config['training']['hyperparameter_tuning']['enabled']:
+            self.logger.log_message("Hyperparameter tuning is enabled. Starting Bayesian search...")
+            self.run_bayesian_search()
+        else:
+            self.logger.log_message("Hyperparameter tuning is disabled. Using predefined training configuration.")
+            self._train_with_configured_hyperparameters()

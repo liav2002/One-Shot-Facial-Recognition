@@ -49,9 +49,21 @@ training:
     betas: [ 0.9, 0.999 ]
     weight_decay: 1e-5
   loss_function: RegularizedCrossEntropy
+  hyperparameter_tuning:
+    enabled: true
+    method: bayesian
+    num_trials: 50
+    search_space:
+      batch_size: [ 32, 256 ]
+      learning_rate: [ 1e-6, 1e-3 ]
+      weight_decay: [ 1e-6, 1e-4 ]
+      betas: [ [ 0.9, 0.999 ], [ 0.5, 0.9 ] ]
+      optimizer: [ Adam, SGD, RMSprop ]
+      loss_function: [ BinaryCrossEntropy, RegularizedCrossEntropy ]
   early_stopping:
     patience: 50
     min_delta: 1e-4
+
 
 data:
   train_pairs_path: ./data/pairsDevTrain.txt

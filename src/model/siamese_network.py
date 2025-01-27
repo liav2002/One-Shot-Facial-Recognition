@@ -15,6 +15,7 @@ class SiameseNetwork(nn.Module):
         super(SiameseNetwork, self).__init__()
 
         self.logger = get_logger()
+        self.logger.log_message("\n")
 
         cnn_config = config['model']['cnn_layers']
         input_size = config['model']['input_size']
