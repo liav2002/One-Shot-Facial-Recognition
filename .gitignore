@@ -1,2 +1,8 @@
+**/.ipynb_checkpoints/
+**/.pytest_cache/
+**/__pycache__/
 .idea/
 temp/
+data/lfw2/
+mlruns/
+output/

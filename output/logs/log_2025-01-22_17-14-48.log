@@ -1,0 +1,487 @@
+Experiment 3: Adam Optimizer, Regularized Cross Entropy (RCE) Loss, with Transforms
+
+2025-01-22 17:14:48,412 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 17:14:48,412 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 17:14:48,414 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 17:14:48,415 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 17:14:48,416 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 17:14:48,416 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 17:14:48,419 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
+2025-01-22 17:14:48,419 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
+2025-01-22 17:14:48,601 - INFO - Initialized Linear weights with mean=0.0, std=0.2
+2025-01-22 17:14:48,601 - INFO - Initialized Linear bias with mean=0.5, std=0.01
+2025-01-22 17:14:48,601 - INFO - Initialized Linear weights with mean=0.0, std=0.2
+2025-01-22 17:14:48,601 - INFO - Initialized Linear bias with mean=0.5, std=0.01
+2025-01-22 17:14:49,359 - INFO - Split Results:
+2025-01-22 17:14:49,360 - INFO - 
++-------------------+---------+--------------+
+| Metric            |   Count | Percentage   |
++===================+=========+==============+
+| Train People      |    1520 |              |
++-------------------+---------+--------------+
+| Train Pairs       |    1572 | (71.45%)     |
++-------------------+---------+--------------+
+| Validation People |     612 |              |
++-------------------+---------+--------------+
+| Validation Pairs  |     628 | (28.55%)     |
++-------------------+---------+--------------+
+| Dropped Pairs     |       0 | (0.00%)      |
++-------------------+---------+--------------+
+2025-01-22 17:14:49,360 - INFO - Data prepared: 1572 training pairs, 628 validation pairs.
+2025-01-22 17:14:49,361 - INFO - _regularized_loss function defined as loss function.
+2025-01-22 17:14:49,361 - INFO - Adam optimizer initialized with parameters: {'lr': 1e-05, 'betas': (0.9, 0.999), 'weight_decay': 1e-05}
+2025-01-22 17:14:52,113 - INFO - Epoch 1, Batch 5: Loss = 0.7072, Accuracy = 0.5047
+2025-01-22 17:14:53,817 - INFO - Epoch 1, Batch 10: Loss = 0.6928, Accuracy = 0.5328
+2025-01-22 17:14:55,512 - INFO - Validation: Loss = 0.6882, Accuracy = 0.5987, Precision = 0.7110, Recall = 0.3785, F1 = 0.4940
+2025-01-22 17:14:55,516 - INFO - Epoch 1/200: Train Loss = 0.7021, Val Loss = 0.6882
+2025-01-22 17:14:56,452 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:14:56,664 - INFO - Model improved at epoch 1. Checkpoint saved.
+2025-01-22 17:14:58,353 - INFO - Epoch 2, Batch 5: Loss = 0.6781, Accuracy = 0.5641
+2025-01-22 17:15:00,095 - INFO - Epoch 2, Batch 10: Loss = 0.6877, Accuracy = 0.5742
+2025-01-22 17:15:01,854 - INFO - Validation: Loss = 0.6822, Accuracy = 0.6178, Precision = 0.6654, Recall = 0.5262, F1 = 0.5876
+2025-01-22 17:15:01,858 - INFO - Epoch 2/200: Train Loss = 0.6879, Val Loss = 0.6822
+2025-01-22 17:15:02,960 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:15:03,409 - INFO - Model improved at epoch 2. Checkpoint saved.
+2025-01-22 17:15:05,102 - INFO - Epoch 3, Batch 5: Loss = 0.6891, Accuracy = 0.6047
+2025-01-22 17:15:06,828 - INFO - Epoch 3, Batch 10: Loss = 0.6876, Accuracy = 0.6102
+2025-01-22 17:15:08,546 - INFO - Validation: Loss = 0.6787, Accuracy = 0.6099, Precision = 0.7222, Recall = 0.4000, F1 = 0.5149
+2025-01-22 17:15:08,552 - INFO - Epoch 3/200: Train Loss = 0.6797, Val Loss = 0.6787
+2025-01-22 17:15:10,118 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:15:10,824 - INFO - Model improved at epoch 3. Checkpoint saved.
+2025-01-22 17:15:12,519 - INFO - Epoch 4, Batch 5: Loss = 0.6790, Accuracy = 0.5922
+2025-01-22 17:15:14,231 - INFO - Epoch 4, Batch 10: Loss = 0.6775, Accuracy = 0.5922
+2025-01-22 17:15:16,013 - INFO - Validation: Loss = 0.6737, Accuracy = 0.6354, Precision = 0.6529, Recall = 0.6308, F1 = 0.6416
+2025-01-22 17:15:16,017 - INFO - Epoch 4/200: Train Loss = 0.6761, Val Loss = 0.6737
+2025-01-22 17:15:17,417 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:15:18,152 - INFO - Model improved at epoch 4. Checkpoint saved.
+2025-01-22 17:15:19,864 - INFO - Epoch 5, Batch 5: Loss = 0.6692, Accuracy = 0.6484
+2025-01-22 17:15:21,559 - INFO - Epoch 5, Batch 10: Loss = 0.6773, Accuracy = 0.6289
+2025-01-22 17:15:23,261 - INFO - Validation: Loss = 0.6678, Accuracy = 0.6290, Precision = 0.6742, Recall = 0.5477, F1 = 0.6044
+2025-01-22 17:15:23,265 - INFO - Epoch 5/200: Train Loss = 0.6720, Val Loss = 0.6678
+2025-01-22 17:15:24,174 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:15:24,631 - INFO - Model improved at epoch 5. Checkpoint saved.
+2025-01-22 17:15:26,334 - INFO - Epoch 6, Batch 5: Loss = 0.6496, Accuracy = 0.6719
+2025-01-22 17:15:28,105 - INFO - Epoch 6, Batch 10: Loss = 0.6922, Accuracy = 0.6523
+2025-01-22 17:15:29,816 - INFO - Validation: Loss = 0.6651, Accuracy = 0.6258, Precision = 0.6585, Recall = 0.5754, F1 = 0.6141
+2025-01-22 17:15:29,820 - INFO - Epoch 6/200: Train Loss = 0.6648, Val Loss = 0.6651
+2025-01-22 17:15:30,723 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:15:31,196 - INFO - Model improved at epoch 6. Checkpoint saved.
+2025-01-22 17:15:32,882 - INFO - Epoch 7, Batch 5: Loss = 0.6140, Accuracy = 0.6609
+2025-01-22 17:15:34,578 - INFO - Epoch 7, Batch 10: Loss = 0.6713, Accuracy = 0.6320
+2025-01-22 17:15:36,267 - INFO - Validation: Loss = 0.6657, Accuracy = 0.6131, Precision = 0.6085, Recall = 0.7077, F1 = 0.6543
+2025-01-22 17:15:36,271 - INFO - Epoch 7/200: Train Loss = 0.6603, Val Loss = 0.6657
+2025-01-22 17:15:37,993 - INFO - Epoch 8, Batch 5: Loss = 0.6674, Accuracy = 0.6438
+2025-01-22 17:15:39,687 - INFO - Epoch 8, Batch 10: Loss = 0.6491, Accuracy = 0.6469
+2025-01-22 17:15:41,446 - INFO - Validation: Loss = 0.6605, Accuracy = 0.6242, Precision = 0.6268, Recall = 0.6769, F1 = 0.6509
+2025-01-22 17:15:41,451 - INFO - Epoch 8/200: Train Loss = 0.6606, Val Loss = 0.6605
+2025-01-22 17:15:42,885 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:15:43,525 - INFO - Model improved at epoch 8. Checkpoint saved.
+2025-01-22 17:15:45,397 - INFO - Epoch 9, Batch 5: Loss = 0.6453, Accuracy = 0.6562
+2025-01-22 17:15:47,111 - INFO - Epoch 9, Batch 10: Loss = 0.6341, Accuracy = 0.6570
+2025-01-22 17:15:48,843 - INFO - Validation: Loss = 0.6556, Accuracy = 0.6322, Precision = 0.6478, Recall = 0.6338, F1 = 0.6407
+2025-01-22 17:15:48,847 - INFO - Epoch 9/200: Train Loss = 0.6499, Val Loss = 0.6556
+2025-01-22 17:15:49,800 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:15:50,293 - INFO - Model improved at epoch 9. Checkpoint saved.
+2025-01-22 17:15:52,088 - INFO - Epoch 10, Batch 5: Loss = 0.6588, Accuracy = 0.6750
+2025-01-22 17:15:53,795 - INFO - Epoch 10, Batch 10: Loss = 0.6443, Accuracy = 0.6664
+2025-01-22 17:15:55,508 - INFO - Validation: Loss = 0.6559, Accuracy = 0.6369, Precision = 0.6374, Recall = 0.6923, F1 = 0.6637
+2025-01-22 17:15:55,512 - INFO - Epoch 10/200: Train Loss = 0.6484, Val Loss = 0.6559
+2025-01-22 17:15:57,282 - INFO - Epoch 11, Batch 5: Loss = 0.6192, Accuracy = 0.6672
+2025-01-22 17:15:58,978 - INFO - Epoch 11, Batch 10: Loss = 0.6381, Accuracy = 0.6695
+2025-01-22 17:16:00,697 - INFO - Validation: Loss = 0.6530, Accuracy = 0.6322, Precision = 0.6433, Recall = 0.6492, F1 = 0.6462
+2025-01-22 17:16:00,701 - INFO - Epoch 11/200: Train Loss = 0.6387, Val Loss = 0.6530
+2025-01-22 17:16:01,592 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:16:02,046 - INFO - Model improved at epoch 11. Checkpoint saved.
+2025-01-22 17:16:03,745 - INFO - Epoch 12, Batch 5: Loss = 0.6335, Accuracy = 0.6781
+2025-01-22 17:16:05,467 - INFO - Epoch 12, Batch 10: Loss = 0.6682, Accuracy = 0.6711
+2025-01-22 17:16:07,165 - INFO - Validation: Loss = 0.6515, Accuracy = 0.6322, Precision = 0.6433, Recall = 0.6492, F1 = 0.6462
+2025-01-22 17:16:07,169 - INFO - Epoch 12/200: Train Loss = 0.6426, Val Loss = 0.6515
+2025-01-22 17:16:08,655 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:16:09,296 - INFO - Model improved at epoch 12. Checkpoint saved.
+2025-01-22 17:16:11,051 - INFO - Epoch 13, Batch 5: Loss = 0.6452, Accuracy = 0.6781
+2025-01-22 17:16:12,750 - INFO - Epoch 13, Batch 10: Loss = 0.6250, Accuracy = 0.6672
+2025-01-22 17:16:14,457 - INFO - Validation: Loss = 0.6504, Accuracy = 0.6338, Precision = 0.6690, Recall = 0.5785, F1 = 0.6205
+2025-01-22 17:16:14,461 - INFO - Epoch 13/200: Train Loss = 0.6356, Val Loss = 0.6504
+2025-01-22 17:16:15,440 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:16:15,903 - INFO - Model improved at epoch 13. Checkpoint saved.
+2025-01-22 17:16:17,646 - INFO - Epoch 14, Batch 5: Loss = 0.6101, Accuracy = 0.6781
+2025-01-22 17:16:19,354 - INFO - Epoch 14, Batch 10: Loss = 0.6202, Accuracy = 0.6641
+2025-01-22 17:16:21,074 - INFO - Validation: Loss = 0.6488, Accuracy = 0.6433, Precision = 0.6573, Recall = 0.6492, F1 = 0.6533
+2025-01-22 17:16:21,078 - INFO - Epoch 14/200: Train Loss = 0.6328, Val Loss = 0.6488
+2025-01-22 17:16:22,042 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:16:22,499 - INFO - Model improved at epoch 14. Checkpoint saved.
+2025-01-22 17:16:24,210 - INFO - Epoch 15, Batch 5: Loss = 0.6142, Accuracy = 0.6516
+2025-01-22 17:16:25,921 - INFO - Epoch 15, Batch 10: Loss = 0.6206, Accuracy = 0.6703
+2025-01-22 17:16:27,622 - INFO - Validation: Loss = 0.6500, Accuracy = 0.6322, Precision = 0.6358, Recall = 0.6769, F1 = 0.6557
+2025-01-22 17:16:27,626 - INFO - Epoch 15/200: Train Loss = 0.6257, Val Loss = 0.6500
+2025-01-22 17:16:29,352 - INFO - Epoch 16, Batch 5: Loss = 0.6366, Accuracy = 0.6922
+2025-01-22 17:16:31,061 - INFO - Epoch 16, Batch 10: Loss = 0.6177, Accuracy = 0.6852
+2025-01-22 17:16:32,826 - INFO - Validation: Loss = 0.6461, Accuracy = 0.6417, Precision = 0.6397, Recall = 0.7046, F1 = 0.6706
+2025-01-22 17:16:32,830 - INFO - Epoch 16/200: Train Loss = 0.6311, Val Loss = 0.6461
+2025-01-22 17:16:34,248 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:16:34,899 - INFO - Model improved at epoch 16. Checkpoint saved.
+2025-01-22 17:16:36,615 - INFO - Epoch 17, Batch 5: Loss = 0.6496, Accuracy = 0.6844
+2025-01-22 17:16:38,329 - INFO - Epoch 17, Batch 10: Loss = 0.6183, Accuracy = 0.6789
+2025-01-22 17:16:40,015 - INFO - Validation: Loss = 0.6454, Accuracy = 0.6576, Precision = 0.6657, Recall = 0.6800, F1 = 0.6728
+2025-01-22 17:16:40,019 - INFO - Epoch 17/200: Train Loss = 0.6197, Val Loss = 0.6454
+2025-01-22 17:16:41,258 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:16:41,725 - INFO - Model improved at epoch 17. Checkpoint saved.
+2025-01-22 17:16:43,420 - INFO - Epoch 18, Batch 5: Loss = 0.6772, Accuracy = 0.6328
+2025-01-22 17:16:45,145 - INFO - Epoch 18, Batch 10: Loss = 0.6059, Accuracy = 0.6664
+2025-01-22 17:16:46,840 - INFO - Validation: Loss = 0.6454, Accuracy = 0.6481, Precision = 0.6347, Recall = 0.7538, F1 = 0.6892
+2025-01-22 17:16:46,844 - INFO - Epoch 18/200: Train Loss = 0.6238, Val Loss = 0.6454
+2025-01-22 17:16:48,568 - INFO - Epoch 19, Batch 5: Loss = 0.6079, Accuracy = 0.7047
+2025-01-22 17:16:50,273 - INFO - Epoch 19, Batch 10: Loss = 0.6172, Accuracy = 0.6891
+2025-01-22 17:16:52,010 - INFO - Validation: Loss = 0.6440, Accuracy = 0.6529, Precision = 0.6442, Recall = 0.7354, F1 = 0.6868
+2025-01-22 17:16:52,014 - INFO - Epoch 19/200: Train Loss = 0.6251, Val Loss = 0.6440
+2025-01-22 17:16:53,276 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:16:54,005 - INFO - Model improved at epoch 19. Checkpoint saved.
+2025-01-22 17:16:55,716 - INFO - Epoch 20, Batch 5: Loss = 0.6695, Accuracy = 0.6891
+2025-01-22 17:16:57,432 - INFO - Epoch 20, Batch 10: Loss = 0.5748, Accuracy = 0.6820
+2025-01-22 17:16:59,146 - INFO - Validation: Loss = 0.6480, Accuracy = 0.6354, Precision = 0.6154, Recall = 0.7877, F1 = 0.6910
+2025-01-22 17:16:59,150 - INFO - Epoch 20/200: Train Loss = 0.6170, Val Loss = 0.6480
+2025-01-22 17:17:00,902 - INFO - Epoch 21, Batch 5: Loss = 0.6303, Accuracy = 0.6641
+2025-01-22 17:17:02,663 - INFO - Epoch 21, Batch 10: Loss = 0.5883, Accuracy = 0.6734
+2025-01-22 17:17:04,365 - INFO - Validation: Loss = 0.6403, Accuracy = 0.6385, Precision = 0.6678, Recall = 0.6000, F1 = 0.6321
+2025-01-22 17:17:04,369 - INFO - Epoch 21/200: Train Loss = 0.6108, Val Loss = 0.6403
+2025-01-22 17:17:05,818 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:17:06,571 - INFO - Model improved at epoch 21. Checkpoint saved.
+2025-01-22 17:17:08,272 - INFO - Epoch 22, Batch 5: Loss = 0.5880, Accuracy = 0.6891
+2025-01-22 17:17:09,967 - INFO - Epoch 22, Batch 10: Loss = 0.5783, Accuracy = 0.6789
+2025-01-22 17:17:11,669 - INFO - Validation: Loss = 0.6404, Accuracy = 0.6465, Precision = 0.6722, Recall = 0.6185, F1 = 0.6442
+2025-01-22 17:17:11,673 - INFO - Epoch 22/200: Train Loss = 0.6052, Val Loss = 0.6404
+2025-01-22 17:17:13,384 - INFO - Epoch 23, Batch 5: Loss = 0.5617, Accuracy = 0.6922
+2025-01-22 17:17:15,069 - INFO - Epoch 23, Batch 10: Loss = 0.6434, Accuracy = 0.6844
+2025-01-22 17:17:16,769 - INFO - Validation: Loss = 0.6366, Accuracy = 0.6783, Precision = 0.6704, Recall = 0.7446, F1 = 0.7055
+2025-01-22 17:17:16,773 - INFO - Epoch 23/200: Train Loss = 0.6100, Val Loss = 0.6366
+2025-01-22 17:17:17,669 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:17:18,130 - INFO - Model improved at epoch 23. Checkpoint saved.
+2025-01-22 17:17:19,830 - INFO - Epoch 24, Batch 5: Loss = 0.6311, Accuracy = 0.6953
+2025-01-22 17:17:21,560 - INFO - Epoch 24, Batch 10: Loss = 0.6121, Accuracy = 0.6844
+2025-01-22 17:17:23,280 - INFO - Validation: Loss = 0.6374, Accuracy = 0.6433, Precision = 0.6667, Recall = 0.6215, F1 = 0.6433
+2025-01-22 17:17:23,284 - INFO - Epoch 24/200: Train Loss = 0.6114, Val Loss = 0.6374
+2025-01-22 17:17:25,018 - INFO - Epoch 25, Batch 5: Loss = 0.6205, Accuracy = 0.6828
+2025-01-22 17:17:26,709 - INFO - Epoch 25, Batch 10: Loss = 0.5917, Accuracy = 0.6781
+2025-01-22 17:17:28,404 - INFO - Validation: Loss = 0.6451, Accuracy = 0.6449, Precision = 0.7217, Recall = 0.5108, F1 = 0.5982
+2025-01-22 17:17:28,408 - INFO - Epoch 25/200: Train Loss = 0.6175, Val Loss = 0.6451
+2025-01-22 17:17:30,123 - INFO - Epoch 26, Batch 5: Loss = 0.6366, Accuracy = 0.6813
+2025-01-22 17:17:31,827 - INFO - Epoch 26, Batch 10: Loss = 0.6145, Accuracy = 0.6797
+2025-01-22 17:17:33,518 - INFO - Validation: Loss = 0.6321, Accuracy = 0.6592, Precision = 0.6628, Recall = 0.6954, F1 = 0.6787
+2025-01-22 17:17:33,523 - INFO - Epoch 26/200: Train Loss = 0.6034, Val Loss = 0.6321
+2025-01-22 17:17:34,999 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:17:35,791 - INFO - Model improved at epoch 26. Checkpoint saved.
+2025-01-22 17:17:37,537 - INFO - Epoch 27, Batch 5: Loss = 0.5805, Accuracy = 0.7031
+2025-01-22 17:17:39,237 - INFO - Epoch 27, Batch 10: Loss = 0.6681, Accuracy = 0.6945
+2025-01-22 17:17:40,953 - INFO - Validation: Loss = 0.6327, Accuracy = 0.6561, Precision = 0.6535, Recall = 0.7138, F1 = 0.6824
+2025-01-22 17:17:40,957 - INFO - Epoch 27/200: Train Loss = 0.5986, Val Loss = 0.6327
+2025-01-22 17:17:42,690 - INFO - Epoch 28, Batch 5: Loss = 0.6010, Accuracy = 0.6906
+2025-01-22 17:17:44,392 - INFO - Epoch 28, Batch 10: Loss = 0.5884, Accuracy = 0.6961
+2025-01-22 17:17:46,110 - INFO - Validation: Loss = 0.6312, Accuracy = 0.6545, Precision = 0.6687, Recall = 0.6585, F1 = 0.6636
+2025-01-22 17:17:46,114 - INFO - Epoch 28/200: Train Loss = 0.5969, Val Loss = 0.6312
+2025-01-22 17:17:47,070 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:17:47,515 - INFO - Model improved at epoch 28. Checkpoint saved.
+2025-01-22 17:17:49,218 - INFO - Epoch 29, Batch 5: Loss = 0.5390, Accuracy = 0.7000
+2025-01-22 17:17:50,915 - INFO - Epoch 29, Batch 10: Loss = 0.5963, Accuracy = 0.6859
+2025-01-22 17:17:52,615 - INFO - Validation: Loss = 0.6309, Accuracy = 0.6608, Precision = 0.6806, Recall = 0.6492, F1 = 0.6646
+2025-01-22 17:17:52,619 - INFO - Epoch 29/200: Train Loss = 0.5986, Val Loss = 0.6309
+2025-01-22 17:17:54,184 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:17:54,821 - INFO - Model improved at epoch 29. Checkpoint saved.
+2025-01-22 17:17:56,549 - INFO - Epoch 30, Batch 5: Loss = 0.5820, Accuracy = 0.6922
+2025-01-22 17:17:58,263 - INFO - Epoch 30, Batch 10: Loss = 0.5750, Accuracy = 0.7094
+2025-01-22 17:17:59,959 - INFO - Validation: Loss = 0.6324, Accuracy = 0.6481, Precision = 0.6688, Recall = 0.6338, F1 = 0.6509
+2025-01-22 17:17:59,963 - INFO - Epoch 30/200: Train Loss = 0.5831, Val Loss = 0.6324
+2025-01-22 17:18:01,681 - INFO - Epoch 31, Batch 5: Loss = 0.5830, Accuracy = 0.7000
+2025-01-22 17:18:03,382 - INFO - Epoch 31, Batch 10: Loss = 0.6194, Accuracy = 0.7023
+2025-01-22 17:18:05,082 - INFO - Validation: Loss = 0.6340, Accuracy = 0.6561, Precision = 0.6408, Recall = 0.7631, F1 = 0.6966
+2025-01-22 17:18:05,086 - INFO - Epoch 31/200: Train Loss = 0.5952, Val Loss = 0.6340
+2025-01-22 17:18:06,795 - INFO - Epoch 32, Batch 5: Loss = 0.5875, Accuracy = 0.6844
+2025-01-22 17:18:08,490 - INFO - Epoch 32, Batch 10: Loss = 0.5674, Accuracy = 0.6906
+2025-01-22 17:18:10,189 - INFO - Validation: Loss = 0.6283, Accuracy = 0.6768, Precision = 0.7148, Recall = 0.6246, F1 = 0.6667
+2025-01-22 17:18:10,194 - INFO - Epoch 32/200: Train Loss = 0.5871, Val Loss = 0.6283
+2025-01-22 17:18:11,099 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:18:11,557 - INFO - Model improved at epoch 32. Checkpoint saved.
+2025-01-22 17:18:13,279 - INFO - Epoch 33, Batch 5: Loss = 0.5805, Accuracy = 0.7109
+2025-01-22 17:18:15,014 - INFO - Epoch 33, Batch 10: Loss = 0.5842, Accuracy = 0.7164
+2025-01-22 17:18:16,752 - INFO - Validation: Loss = 0.6285, Accuracy = 0.6688, Precision = 0.6594, Recall = 0.7446, F1 = 0.6994
+2025-01-22 17:18:16,756 - INFO - Epoch 33/200: Train Loss = 0.5768, Val Loss = 0.6285
+2025-01-22 17:18:18,511 - INFO - Epoch 34, Batch 5: Loss = 0.5230, Accuracy = 0.7156
+2025-01-22 17:18:20,236 - INFO - Epoch 34, Batch 10: Loss = 0.5978, Accuracy = 0.7094
+2025-01-22 17:18:21,941 - INFO - Validation: Loss = 0.6317, Accuracy = 0.6688, Precision = 0.6452, Recall = 0.8000, F1 = 0.7143
+2025-01-22 17:18:21,945 - INFO - Epoch 34/200: Train Loss = 0.5824, Val Loss = 0.6317
+2025-01-22 17:18:23,664 - INFO - Epoch 35, Batch 5: Loss = 0.6251, Accuracy = 0.7172
+2025-01-22 17:18:25,356 - INFO - Epoch 35, Batch 10: Loss = 0.6032, Accuracy = 0.7219
+2025-01-22 17:18:27,056 - INFO - Validation: Loss = 0.6307, Accuracy = 0.6768, Precision = 0.7210, Recall = 0.6123, F1 = 0.6622
+2025-01-22 17:18:27,060 - INFO - Epoch 35/200: Train Loss = 0.5796, Val Loss = 0.6307
+2025-01-22 17:18:28,774 - INFO - Epoch 36, Batch 5: Loss = 0.5394, Accuracy = 0.7453
+2025-01-22 17:18:30,461 - INFO - Epoch 36, Batch 10: Loss = 0.5438, Accuracy = 0.7375
+2025-01-22 17:18:32,180 - INFO - Validation: Loss = 0.6282, Accuracy = 0.6736, Precision = 0.6818, Recall = 0.6923, F1 = 0.6870
+2025-01-22 17:18:32,184 - INFO - Epoch 36/200: Train Loss = 0.5735, Val Loss = 0.6282
+2025-01-22 17:18:33,370 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:18:33,831 - INFO - Model improved at epoch 36. Checkpoint saved.
+2025-01-22 17:18:35,583 - INFO - Epoch 37, Batch 5: Loss = 0.5883, Accuracy = 0.7281
+2025-01-22 17:18:37,280 - INFO - Epoch 37, Batch 10: Loss = 0.5607, Accuracy = 0.7406
+2025-01-22 17:18:38,970 - INFO - Validation: Loss = 0.6227, Accuracy = 0.6847, Precision = 0.7003, Recall = 0.6831, F1 = 0.6916
+2025-01-22 17:18:38,974 - INFO - Epoch 37/200: Train Loss = 0.5642, Val Loss = 0.6227
+2025-01-22 17:18:40,504 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:18:41,229 - INFO - Model improved at epoch 37. Checkpoint saved.
+2025-01-22 17:18:42,927 - INFO - Epoch 38, Batch 5: Loss = 0.5733, Accuracy = 0.7328
+2025-01-22 17:18:44,630 - INFO - Epoch 38, Batch 10: Loss = 0.5936, Accuracy = 0.7203
+2025-01-22 17:18:46,344 - INFO - Validation: Loss = 0.6237, Accuracy = 0.6768, Precision = 0.6667, Recall = 0.7508, F1 = 0.7062
+2025-01-22 17:18:46,348 - INFO - Epoch 38/200: Train Loss = 0.5700, Val Loss = 0.6237
+2025-01-22 17:18:48,058 - INFO - Epoch 39, Batch 5: Loss = 0.5486, Accuracy = 0.7281
+2025-01-22 17:18:49,760 - INFO - Epoch 39, Batch 10: Loss = 0.5753, Accuracy = 0.7148
+2025-01-22 17:18:51,444 - INFO - Validation: Loss = 0.6310, Accuracy = 0.6656, Precision = 0.6463, Recall = 0.7815, F1 = 0.7075
+2025-01-22 17:18:51,448 - INFO - Epoch 39/200: Train Loss = 0.5683, Val Loss = 0.6310
+2025-01-22 17:18:53,167 - INFO - Epoch 40, Batch 5: Loss = 0.5801, Accuracy = 0.7078
+2025-01-22 17:18:54,881 - INFO - Epoch 40, Batch 10: Loss = 0.5362, Accuracy = 0.7266
+2025-01-22 17:18:56,606 - INFO - Validation: Loss = 0.6324, Accuracy = 0.6672, Precision = 0.7437, Recall = 0.5446, F1 = 0.6288
+2025-01-22 17:18:56,610 - INFO - Epoch 40/200: Train Loss = 0.5565, Val Loss = 0.6324
+2025-01-22 17:18:58,334 - INFO - Epoch 41, Batch 5: Loss = 0.5610, Accuracy = 0.7375
+2025-01-22 17:19:00,056 - INFO - Epoch 41, Batch 10: Loss = 0.5881, Accuracy = 0.7266
+2025-01-22 17:19:01,758 - INFO - Validation: Loss = 0.6438, Accuracy = 0.6529, Precision = 0.7465, Recall = 0.4985, F1 = 0.5978
+2025-01-22 17:19:01,762 - INFO - Epoch 41/200: Train Loss = 0.5648, Val Loss = 0.6438
+2025-01-22 17:19:03,476 - INFO - Epoch 42, Batch 5: Loss = 0.5205, Accuracy = 0.7375
+2025-01-22 17:19:05,175 - INFO - Epoch 42, Batch 10: Loss = 0.5627, Accuracy = 0.7359
+2025-01-22 17:19:06,859 - INFO - Validation: Loss = 0.6265, Accuracy = 0.6704, Precision = 0.7185, Recall = 0.5969, F1 = 0.6521
+2025-01-22 17:19:06,863 - INFO - Epoch 42/200: Train Loss = 0.5595, Val Loss = 0.6265
+2025-01-22 17:19:08,568 - INFO - Epoch 43, Batch 5: Loss = 0.5506, Accuracy = 0.7516
+2025-01-22 17:19:10,257 - INFO - Epoch 43, Batch 10: Loss = 0.6073, Accuracy = 0.7273
+2025-01-22 17:19:11,964 - INFO - Validation: Loss = 0.6289, Accuracy = 0.6704, Precision = 0.6545, Recall = 0.7692, F1 = 0.7072
+2025-01-22 17:19:11,968 - INFO - Epoch 43/200: Train Loss = 0.5552, Val Loss = 0.6289
+2025-01-22 17:19:13,729 - INFO - Epoch 44, Batch 5: Loss = 0.5043, Accuracy = 0.7500
+2025-01-22 17:19:15,436 - INFO - Epoch 44, Batch 10: Loss = 0.5561, Accuracy = 0.7438
+2025-01-22 17:19:17,137 - INFO - Validation: Loss = 0.6259, Accuracy = 0.6704, Precision = 0.7007, Recall = 0.6338, F1 = 0.6656
+2025-01-22 17:19:17,142 - INFO - Epoch 44/200: Train Loss = 0.5466, Val Loss = 0.6259
+2025-01-22 17:19:18,852 - INFO - Epoch 45, Batch 5: Loss = 0.6072, Accuracy = 0.7469
+2025-01-22 17:19:20,551 - INFO - Epoch 45, Batch 10: Loss = 0.5507, Accuracy = 0.7406
+2025-01-22 17:19:22,270 - INFO - Validation: Loss = 0.6330, Accuracy = 0.6624, Precision = 0.6805, Recall = 0.6554, F1 = 0.6677
+2025-01-22 17:19:22,275 - INFO - Epoch 45/200: Train Loss = 0.5608, Val Loss = 0.6330
+2025-01-22 17:19:23,994 - INFO - Epoch 46, Batch 5: Loss = 0.5691, Accuracy = 0.7469
+2025-01-22 17:19:25,695 - INFO - Epoch 46, Batch 10: Loss = 0.5255, Accuracy = 0.7344
+2025-01-22 17:19:27,396 - INFO - Validation: Loss = 0.6243, Accuracy = 0.6720, Precision = 0.6977, Recall = 0.6462, F1 = 0.6709
+2025-01-22 17:19:27,400 - INFO - Epoch 46/200: Train Loss = 0.5359, Val Loss = 0.6243
+2025-01-22 17:19:29,148 - INFO - Epoch 47, Batch 5: Loss = 0.5415, Accuracy = 0.7484
+2025-01-22 17:19:30,864 - INFO - Epoch 47, Batch 10: Loss = 0.5319, Accuracy = 0.7336
+2025-01-22 17:19:32,578 - INFO - Validation: Loss = 0.6199, Accuracy = 0.6736, Precision = 0.7098, Recall = 0.6246, F1 = 0.6645
+2025-01-22 17:19:32,582 - INFO - Epoch 47/200: Train Loss = 0.5498, Val Loss = 0.6199
+2025-01-22 17:19:33,533 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:19:33,987 - INFO - Model improved at epoch 47. Checkpoint saved.
+2025-01-22 17:19:35,714 - INFO - Epoch 48, Batch 5: Loss = 0.5213, Accuracy = 0.7516
+2025-01-22 17:19:37,439 - INFO - Epoch 48, Batch 10: Loss = 0.5264, Accuracy = 0.7453
+2025-01-22 17:19:39,151 - INFO - Validation: Loss = 0.6229, Accuracy = 0.6815, Precision = 0.7306, Recall = 0.6092, F1 = 0.6644
+2025-01-22 17:19:39,156 - INFO - Epoch 48/200: Train Loss = 0.5367, Val Loss = 0.6229
+2025-01-22 17:19:40,896 - INFO - Epoch 49, Batch 5: Loss = 0.5434, Accuracy = 0.7406
+2025-01-22 17:19:42,593 - INFO - Epoch 49, Batch 10: Loss = 0.5370, Accuracy = 0.7312
+2025-01-22 17:19:44,285 - INFO - Validation: Loss = 0.6212, Accuracy = 0.6752, Precision = 0.7093, Recall = 0.6308, F1 = 0.6678
+2025-01-22 17:19:44,289 - INFO - Epoch 49/200: Train Loss = 0.5484, Val Loss = 0.6212
+2025-01-22 17:19:46,016 - INFO - Epoch 50, Batch 5: Loss = 0.5250, Accuracy = 0.7516
+2025-01-22 17:19:47,717 - INFO - Epoch 50, Batch 10: Loss = 0.5548, Accuracy = 0.7602
+2025-01-22 17:19:49,412 - INFO - Validation: Loss = 0.6225, Accuracy = 0.6783, Precision = 0.7173, Recall = 0.6246, F1 = 0.6678
+2025-01-22 17:19:49,416 - INFO - Epoch 50/200: Train Loss = 0.5346, Val Loss = 0.6225
+2025-01-22 17:19:51,159 - INFO - Epoch 51, Batch 5: Loss = 0.5361, Accuracy = 0.7484
+2025-01-22 17:19:52,869 - INFO - Epoch 51, Batch 10: Loss = 0.5184, Accuracy = 0.7406
+2025-01-22 17:19:54,567 - INFO - Validation: Loss = 0.6153, Accuracy = 0.6752, Precision = 0.6862, Recall = 0.6862, F1 = 0.6862
+2025-01-22 17:19:54,571 - INFO - Epoch 51/200: Train Loss = 0.5320, Val Loss = 0.6153
+2025-01-22 17:19:55,935 - INFO - Checkpoint saved at ./output/checkpoints//best_model.pth
+2025-01-22 17:19:56,520 - INFO - Model improved at epoch 51. Checkpoint saved.
+2025-01-22 17:19:58,244 - INFO - Epoch 52, Batch 5: Loss = 0.5042, Accuracy = 0.7469
+2025-01-22 17:19:59,954 - INFO - Epoch 52, Batch 10: Loss = 0.5506, Accuracy = 0.7477
+2025-01-22 17:20:01,657 - INFO - Validation: Loss = 0.6207, Accuracy = 0.6799, Precision = 0.6867, Recall = 0.7015, F1 = 0.6941
+2025-01-22 17:20:01,661 - INFO - Epoch 52/200: Train Loss = 0.5272, Val Loss = 0.6207
+2025-01-22 17:20:03,390 - INFO - Epoch 53, Batch 5: Loss = 0.5532, Accuracy = 0.7609
+2025-01-22 17:20:05,110 - INFO - Epoch 53, Batch 10: Loss = 0.5395, Accuracy = 0.7500
+2025-01-22 17:20:06,805 - INFO - Validation: Loss = 0.6340, Accuracy = 0.6497, Precision = 0.6923, Recall = 0.5815, F1 = 0.6321
+2025-01-22 17:20:06,809 - INFO - Epoch 53/200: Train Loss = 0.5280, Val Loss = 0.6340
+2025-01-22 17:20:08,526 - INFO - Epoch 54, Batch 5: Loss = 0.4999, Accuracy = 0.7641
+2025-01-22 17:20:10,241 - INFO - Epoch 54, Batch 10: Loss = 0.5397, Accuracy = 0.7664
+2025-01-22 17:20:11,945 - INFO - Validation: Loss = 0.6263, Accuracy = 0.6736, Precision = 0.7027, Recall = 0.6400, F1 = 0.6699
+2025-01-22 17:20:11,949 - INFO - Epoch 54/200: Train Loss = 0.5155, Val Loss = 0.6263
+2025-01-22 17:20:13,677 - INFO - Epoch 55, Batch 5: Loss = 0.5591, Accuracy = 0.7453
+2025-01-22 17:20:15,377 - INFO - Epoch 55, Batch 10: Loss = 0.5473, Accuracy = 0.7422
+2025-01-22 17:20:17,088 - INFO - Validation: Loss = 0.6325, Accuracy = 0.6672, Precision = 0.7339, Recall = 0.5600, F1 = 0.6353
+2025-01-22 17:20:17,093 - INFO - Epoch 55/200: Train Loss = 0.5227, Val Loss = 0.6325
+2025-01-22 17:20:18,809 - INFO - Epoch 56, Batch 5: Loss = 0.4730, Accuracy = 0.7625
+2025-01-22 17:20:20,510 - INFO - Epoch 56, Batch 10: Loss = 0.5240, Accuracy = 0.7492
+2025-01-22 17:20:22,241 - INFO - Validation: Loss = 0.6375, Accuracy = 0.6688, Precision = 0.6481, Recall = 0.7877, F1 = 0.7111
+2025-01-22 17:20:22,246 - INFO - Epoch 56/200: Train Loss = 0.5340, Val Loss = 0.6375
+2025-01-22 17:20:23,980 - INFO - Epoch 57, Batch 5: Loss = 0.5325, Accuracy = 0.7406
+2025-01-22 17:20:25,700 - INFO - Epoch 57, Batch 10: Loss = 0.5282, Accuracy = 0.7648
+2025-01-22 17:20:27,398 - INFO - Validation: Loss = 0.6174, Accuracy = 0.6752, Precision = 0.6850, Recall = 0.6892, F1 = 0.6871
+2025-01-22 17:20:27,402 - INFO - Epoch 57/200: Train Loss = 0.5176, Val Loss = 0.6174
+2025-01-22 17:20:29,117 - INFO - Epoch 58, Batch 5: Loss = 0.5825, Accuracy = 0.7594
+2025-01-22 17:20:30,820 - INFO - Epoch 58, Batch 10: Loss = 0.5003, Accuracy = 0.7641
+2025-01-22 17:20:32,549 - INFO - Validation: Loss = 0.6176, Accuracy = 0.6863, Precision = 0.6882, Recall = 0.7200, F1 = 0.7038
+2025-01-22 17:20:32,554 - INFO - Epoch 58/200: Train Loss = 0.5089, Val Loss = 0.6176
+2025-01-22 17:20:34,284 - INFO - Epoch 59, Batch 5: Loss = 0.5144, Accuracy = 0.7531
+2025-01-22 17:20:36,020 - INFO - Epoch 59, Batch 10: Loss = 0.5083, Accuracy = 0.7531
+2025-01-22 17:20:37,721 - INFO - Validation: Loss = 0.6224, Accuracy = 0.6879, Precision = 0.6891, Recall = 0.7231, F1 = 0.7057
+2025-01-22 17:20:37,725 - INFO - Epoch 59/200: Train Loss = 0.5136, Val Loss = 0.6224
+2025-01-22 17:20:39,442 - INFO - Epoch 60, Batch 5: Loss = 0.5433, Accuracy = 0.7578
+2025-01-22 17:20:41,135 - INFO - Epoch 60, Batch 10: Loss = 0.4791, Accuracy = 0.7773
+2025-01-22 17:20:42,835 - INFO - Validation: Loss = 0.6173, Accuracy = 0.6863, Precision = 0.6871, Recall = 0.7231, F1 = 0.7046
+2025-01-22 17:20:42,839 - INFO - Epoch 60/200: Train Loss = 0.5009, Val Loss = 0.6173
+2025-01-22 17:20:44,561 - INFO - Epoch 61, Batch 5: Loss = 0.5165, Accuracy = 0.7750
+2025-01-22 17:20:46,261 - INFO - Epoch 61, Batch 10: Loss = 0.4199, Accuracy = 0.7742
+2025-01-22 17:20:47,959 - INFO - Validation: Loss = 0.6231, Accuracy = 0.6768, Precision = 0.7089, Recall = 0.6369, F1 = 0.6710
+2025-01-22 17:20:47,963 - INFO - Epoch 61/200: Train Loss = 0.5109, Val Loss = 0.6231
+2025-01-22 17:20:49,692 - INFO - Epoch 62, Batch 5: Loss = 0.5285, Accuracy = 0.7719
+2025-01-22 17:20:51,421 - INFO - Epoch 62, Batch 10: Loss = 0.4532, Accuracy = 0.7656
+2025-01-22 17:20:53,122 - INFO - Validation: Loss = 0.6263, Accuracy = 0.6720, Precision = 0.6854, Recall = 0.6769, F1 = 0.6811
+2025-01-22 17:20:53,126 - INFO - Epoch 62/200: Train Loss = 0.5012, Val Loss = 0.6263
+2025-01-22 17:20:54,850 - INFO - Epoch 63, Batch 5: Loss = 0.5102, Accuracy = 0.7641
+2025-01-22 17:20:56,573 - INFO - Epoch 63, Batch 10: Loss = 0.5075, Accuracy = 0.7641
+2025-01-22 17:20:58,268 - INFO - Validation: Loss = 0.6235, Accuracy = 0.6688, Precision = 0.7038, Recall = 0.6215, F1 = 0.6601
+2025-01-22 17:20:58,272 - INFO - Epoch 63/200: Train Loss = 0.4914, Val Loss = 0.6235
+2025-01-22 17:20:59,996 - INFO - Epoch 64, Batch 5: Loss = 0.4345, Accuracy = 0.7547
+2025-01-22 17:21:01,692 - INFO - Epoch 64, Batch 10: Loss = 0.4990, Accuracy = 0.7719
+2025-01-22 17:21:03,388 - INFO - Validation: Loss = 0.6223, Accuracy = 0.6672, Precision = 0.6973, Recall = 0.6308, F1 = 0.6624
+2025-01-22 17:21:03,392 - INFO - Epoch 64/200: Train Loss = 0.5011, Val Loss = 0.6223
+2025-01-22 17:21:05,114 - INFO - Epoch 65, Batch 5: Loss = 0.4377, Accuracy = 0.7953
+2025-01-22 17:21:06,823 - INFO - Epoch 65, Batch 10: Loss = 0.4877, Accuracy = 0.7836
+2025-01-22 17:21:08,529 - INFO - Validation: Loss = 0.6356, Accuracy = 0.6576, Precision = 0.7037, Recall = 0.5846, F1 = 0.6387
+2025-01-22 17:21:08,533 - INFO - Epoch 65/200: Train Loss = 0.4892, Val Loss = 0.6356
+2025-01-22 17:21:10,259 - INFO - Epoch 66, Batch 5: Loss = 0.4375, Accuracy = 0.7500
+2025-01-22 17:21:11,972 - INFO - Epoch 66, Batch 10: Loss = 0.4710, Accuracy = 0.7773
+2025-01-22 17:21:13,665 - INFO - Validation: Loss = 0.6196, Accuracy = 0.6863, Precision = 0.7000, Recall = 0.6892, F1 = 0.6946
+2025-01-22 17:21:13,669 - INFO - Epoch 66/200: Train Loss = 0.4895, Val Loss = 0.6196
+2025-01-22 17:21:15,385 - INFO - Epoch 67, Batch 5: Loss = 0.5312, Accuracy = 0.7906
+2025-01-22 17:21:17,081 - INFO - Epoch 67, Batch 10: Loss = 0.4155, Accuracy = 0.7820
+2025-01-22 17:21:18,817 - INFO - Validation: Loss = 0.6248, Accuracy = 0.6815, Precision = 0.7104, Recall = 0.6492, F1 = 0.6785
+2025-01-22 17:21:18,821 - INFO - Epoch 67/200: Train Loss = 0.4855, Val Loss = 0.6248
+2025-01-22 17:21:20,544 - INFO - Epoch 68, Batch 5: Loss = 0.4619, Accuracy = 0.8203
+2025-01-22 17:21:22,245 - INFO - Epoch 68, Batch 10: Loss = 0.4863, Accuracy = 0.7852
+2025-01-22 17:21:23,942 - INFO - Validation: Loss = 0.6305, Accuracy = 0.6672, Precision = 0.7014, Recall = 0.6215, F1 = 0.6591
+2025-01-22 17:21:23,946 - INFO - Epoch 68/200: Train Loss = 0.4929, Val Loss = 0.6305
+2025-01-22 17:21:25,665 - INFO - Epoch 69, Batch 5: Loss = 0.5107, Accuracy = 0.7641
+2025-01-22 17:21:27,369 - INFO - Epoch 69, Batch 10: Loss = 0.4673, Accuracy = 0.7859
+2025-01-22 17:21:29,059 - INFO - Validation: Loss = 0.6275, Accuracy = 0.6831, Precision = 0.6933, Recall = 0.6954, F1 = 0.6943
+2025-01-22 17:21:29,063 - INFO - Epoch 69/200: Train Loss = 0.4803, Val Loss = 0.6275
+2025-01-22 17:21:30,779 - INFO - Epoch 70, Batch 5: Loss = 0.5209, Accuracy = 0.8094
+2025-01-22 17:21:32,475 - INFO - Epoch 70, Batch 10: Loss = 0.5009, Accuracy = 0.7953
+2025-01-22 17:21:34,190 - INFO - Validation: Loss = 0.6264, Accuracy = 0.6736, Precision = 0.6852, Recall = 0.6831, F1 = 0.6841
+2025-01-22 17:21:34,194 - INFO - Epoch 70/200: Train Loss = 0.4799, Val Loss = 0.6264
+2025-01-22 17:21:35,909 - INFO - Epoch 71, Batch 5: Loss = 0.4507, Accuracy = 0.7984
+2025-01-22 17:21:37,622 - INFO - Epoch 71, Batch 10: Loss = 0.5076, Accuracy = 0.7836
+2025-01-22 17:21:39,313 - INFO - Validation: Loss = 0.6246, Accuracy = 0.6799, Precision = 0.6937, Recall = 0.6831, F1 = 0.6884
+2025-01-22 17:21:39,317 - INFO - Epoch 71/200: Train Loss = 0.4893, Val Loss = 0.6246
+2025-01-22 17:21:41,034 - INFO - Epoch 72, Batch 5: Loss = 0.5087, Accuracy = 0.7703
+2025-01-22 17:21:42,732 - INFO - Epoch 72, Batch 10: Loss = 0.4694, Accuracy = 0.7766
+2025-01-22 17:21:44,423 - INFO - Validation: Loss = 0.6163, Accuracy = 0.6911, Precision = 0.7003, Recall = 0.7046, F1 = 0.7025
+2025-01-22 17:21:44,427 - INFO - Epoch 72/200: Train Loss = 0.4831, Val Loss = 0.6163
+2025-01-22 17:21:46,153 - INFO - Epoch 73, Batch 5: Loss = 0.4550, Accuracy = 0.7812
+2025-01-22 17:21:47,870 - INFO - Epoch 73, Batch 10: Loss = 0.4658, Accuracy = 0.7750
+2025-01-22 17:21:49,571 - INFO - Validation: Loss = 0.6212, Accuracy = 0.6911, Precision = 0.6991, Recall = 0.7077, F1 = 0.7034
+2025-01-22 17:21:49,575 - INFO - Epoch 73/200: Train Loss = 0.4757, Val Loss = 0.6212
+2025-01-22 17:21:51,299 - INFO - Epoch 74, Batch 5: Loss = 0.5598, Accuracy = 0.7797
+2025-01-22 17:21:53,014 - INFO - Epoch 74, Batch 10: Loss = 0.5156, Accuracy = 0.7805
+2025-01-22 17:21:54,705 - INFO - Validation: Loss = 0.6278, Accuracy = 0.6783, Precision = 0.7030, Recall = 0.6554, F1 = 0.6783
+2025-01-22 17:21:54,709 - INFO - Epoch 74/200: Train Loss = 0.4779, Val Loss = 0.6278
+2025-01-22 17:21:56,438 - INFO - Epoch 75, Batch 5: Loss = 0.4559, Accuracy = 0.7875
+2025-01-22 17:21:58,159 - INFO - Epoch 75, Batch 10: Loss = 0.4922, Accuracy = 0.7898
+2025-01-22 17:21:59,858 - INFO - Validation: Loss = 0.6255, Accuracy = 0.6831, Precision = 0.7032, Recall = 0.6708, F1 = 0.6866
+2025-01-22 17:21:59,862 - INFO - Epoch 75/200: Train Loss = 0.4624, Val Loss = 0.6255
+2025-01-22 17:22:01,588 - INFO - Epoch 76, Batch 5: Loss = 0.4669, Accuracy = 0.7875
+2025-01-22 17:22:03,293 - INFO - Epoch 76, Batch 10: Loss = 0.4713, Accuracy = 0.7961
+2025-01-22 17:22:04,983 - INFO - Validation: Loss = 0.6352, Accuracy = 0.6576, Precision = 0.7115, Recall = 0.5692, F1 = 0.6325
+2025-01-22 17:22:04,988 - INFO - Epoch 76/200: Train Loss = 0.4624, Val Loss = 0.6352
+2025-01-22 17:22:06,710 - INFO - Epoch 77, Batch 5: Loss = 0.4521, Accuracy = 0.7859
+2025-01-22 17:22:08,418 - INFO - Epoch 77, Batch 10: Loss = 0.4723, Accuracy = 0.7961
+2025-01-22 17:22:10,110 - INFO - Validation: Loss = 0.6217, Accuracy = 0.6831, Precision = 0.6898, Recall = 0.7046, F1 = 0.6971
+2025-01-22 17:22:10,114 - INFO - Epoch 77/200: Train Loss = 0.4646, Val Loss = 0.6217
+2025-01-22 17:22:11,825 - INFO - Epoch 78, Batch 5: Loss = 0.4719, Accuracy = 0.8031
+2025-01-22 17:22:13,514 - INFO - Epoch 78, Batch 10: Loss = 0.4299, Accuracy = 0.8078
+2025-01-22 17:22:15,205 - INFO - Validation: Loss = 0.6269, Accuracy = 0.6863, Precision = 0.7133, Recall = 0.6585, F1 = 0.6848
+2025-01-22 17:22:15,209 - INFO - Epoch 78/200: Train Loss = 0.4735, Val Loss = 0.6269
+2025-01-22 17:22:16,917 - INFO - Epoch 79, Batch 5: Loss = 0.4943, Accuracy = 0.7812
+2025-01-22 17:22:18,609 - INFO - Epoch 79, Batch 10: Loss = 0.4423, Accuracy = 0.7945
+2025-01-22 17:22:20,299 - INFO - Validation: Loss = 0.6375, Accuracy = 0.6911, Precision = 0.6944, Recall = 0.7200, F1 = 0.7069
+2025-01-22 17:22:20,303 - INFO - Epoch 79/200: Train Loss = 0.4639, Val Loss = 0.6375
+2025-01-22 17:22:22,019 - INFO - Epoch 80, Batch 5: Loss = 0.5553, Accuracy = 0.7797
+2025-01-22 17:22:23,708 - INFO - Epoch 80, Batch 10: Loss = 0.5187, Accuracy = 0.7859
+2025-01-22 17:22:25,404 - INFO - Validation: Loss = 0.6346, Accuracy = 0.6688, Precision = 0.6857, Recall = 0.6646, F1 = 0.6750
+2025-01-22 17:22:25,408 - INFO - Epoch 80/200: Train Loss = 0.4736, Val Loss = 0.6346
+2025-01-22 17:22:27,137 - INFO - Epoch 81, Batch 5: Loss = 0.5248, Accuracy = 0.8109
+2025-01-22 17:22:28,855 - INFO - Epoch 81, Batch 10: Loss = 0.5559, Accuracy = 0.7883
+2025-01-22 17:22:30,573 - INFO - Validation: Loss = 0.6290, Accuracy = 0.6895, Precision = 0.7124, Recall = 0.6708, F1 = 0.6910
+2025-01-22 17:22:30,577 - INFO - Epoch 81/200: Train Loss = 0.4649, Val Loss = 0.6290
+2025-01-22 17:22:32,311 - INFO - Epoch 82, Batch 5: Loss = 0.3816, Accuracy = 0.8187
+2025-01-22 17:22:34,006 - INFO - Epoch 82, Batch 10: Loss = 0.5063, Accuracy = 0.8094
+2025-01-22 17:22:35,699 - INFO - Validation: Loss = 0.6297, Accuracy = 0.6815, Precision = 0.7119, Recall = 0.6462, F1 = 0.6774
+2025-01-22 17:22:35,704 - INFO - Epoch 82/200: Train Loss = 0.4563, Val Loss = 0.6297
+2025-01-22 17:22:37,428 - INFO - Epoch 83, Batch 5: Loss = 0.4463, Accuracy = 0.8125
+2025-01-22 17:22:39,142 - INFO - Epoch 83, Batch 10: Loss = 0.4868, Accuracy = 0.8039
+2025-01-22 17:22:40,840 - INFO - Validation: Loss = 0.6361, Accuracy = 0.6799, Precision = 0.7385, Recall = 0.5908, F1 = 0.6564
+2025-01-22 17:22:40,844 - INFO - Epoch 83/200: Train Loss = 0.4714, Val Loss = 0.6361
+2025-01-22 17:22:42,577 - INFO - Epoch 84, Batch 5: Loss = 0.5096, Accuracy = 0.8063
+2025-01-22 17:22:44,290 - INFO - Epoch 84, Batch 10: Loss = 0.4615, Accuracy = 0.8125
+2025-01-22 17:22:45,987 - INFO - Validation: Loss = 0.6352, Accuracy = 0.6768, Precision = 0.7133, Recall = 0.6277, F1 = 0.6678
+2025-01-22 17:22:45,991 - INFO - Epoch 84/200: Train Loss = 0.4621, Val Loss = 0.6352
+2025-01-22 17:22:47,707 - INFO - Epoch 85, Batch 5: Loss = 0.4506, Accuracy = 0.8047
+2025-01-22 17:22:49,396 - INFO - Epoch 85, Batch 10: Loss = 0.4092, Accuracy = 0.8148
+2025-01-22 17:22:51,082 - INFO - Validation: Loss = 0.6423, Accuracy = 0.6704, Precision = 0.7235, Recall = 0.5877, F1 = 0.6486
+2025-01-22 17:22:51,086 - INFO - Epoch 85/200: Train Loss = 0.4556, Val Loss = 0.6423
+2025-01-22 17:22:52,806 - INFO - Epoch 86, Batch 5: Loss = 0.4512, Accuracy = 0.8141
+2025-01-22 17:22:54,498 - INFO - Epoch 86, Batch 10: Loss = 0.4374, Accuracy = 0.8219
+2025-01-22 17:22:56,214 - INFO - Validation: Loss = 0.6370, Accuracy = 0.6752, Precision = 0.6945, Recall = 0.6646, F1 = 0.6792
+2025-01-22 17:22:56,218 - INFO - Epoch 86/200: Train Loss = 0.4443, Val Loss = 0.6370
+2025-01-22 17:22:57,948 - INFO - Epoch 87, Batch 5: Loss = 0.4437, Accuracy = 0.7969
+2025-01-22 17:22:59,652 - INFO - Epoch 87, Batch 10: Loss = 0.3858, Accuracy = 0.8094
+2025-01-22 17:23:01,350 - INFO - Validation: Loss = 0.6485, Accuracy = 0.6736, Precision = 0.7439, Recall = 0.5631, F1 = 0.6410
+2025-01-22 17:23:01,354 - INFO - Epoch 87/200: Train Loss = 0.4490, Val Loss = 0.6485
+2025-01-22 17:23:03,077 - INFO - Epoch 88, Batch 5: Loss = 0.4301, Accuracy = 0.8000
+2025-01-22 17:23:04,788 - INFO - Epoch 88, Batch 10: Loss = 0.4442, Accuracy = 0.8023
+2025-01-22 17:23:06,510 - INFO - Validation: Loss = 0.6328, Accuracy = 0.6831, Precision = 0.7234, Recall = 0.6277, F1 = 0.6722
+2025-01-22 17:23:06,514 - INFO - Epoch 88/200: Train Loss = 0.4557, Val Loss = 0.6328
+2025-01-22 17:23:08,242 - INFO - Epoch 89, Batch 5: Loss = 0.4435, Accuracy = 0.8156
+2025-01-22 17:23:09,951 - INFO - Epoch 89, Batch 10: Loss = 0.4373, Accuracy = 0.8187
+2025-01-22 17:23:11,678 - INFO - Validation: Loss = 0.6243, Accuracy = 0.6879, Precision = 0.7022, Recall = 0.6892, F1 = 0.6957
+2025-01-22 17:23:11,682 - INFO - Epoch 89/200: Train Loss = 0.4489, Val Loss = 0.6243
+2025-01-22 17:23:13,412 - INFO - Epoch 90, Batch 5: Loss = 0.4311, Accuracy = 0.8328
+2025-01-22 17:23:15,122 - INFO - Epoch 90, Batch 10: Loss = 0.4866, Accuracy = 0.8102
+2025-01-22 17:23:16,825 - INFO - Validation: Loss = 0.6234, Accuracy = 0.6863, Precision = 0.6939, Recall = 0.7046, F1 = 0.6992
+2025-01-22 17:23:16,829 - INFO - Epoch 90/200: Train Loss = 0.4410, Val Loss = 0.6234
+2025-01-22 17:23:18,546 - INFO - Epoch 91, Batch 5: Loss = 0.4150, Accuracy = 0.8078
+2025-01-22 17:23:20,247 - INFO - Epoch 91, Batch 10: Loss = 0.4186, Accuracy = 0.8102
+2025-01-22 17:23:21,938 - INFO - Validation: Loss = 0.6350, Accuracy = 0.6815, Precision = 0.7273, Recall = 0.6154, F1 = 0.6667
+2025-01-22 17:23:21,961 - INFO - Epoch 91/200: Train Loss = 0.4450, Val Loss = 0.6350
+2025-01-22 17:23:23,679 - INFO - Epoch 92, Batch 5: Loss = 0.4847, Accuracy = 0.8172
+2025-01-22 17:23:25,379 - INFO - Epoch 92, Batch 10: Loss = 0.4242, Accuracy = 0.8234
+2025-01-22 17:23:27,087 - INFO - Validation: Loss = 0.6456, Accuracy = 0.6768, Precision = 0.7364, Recall = 0.5846, F1 = 0.6518
+2025-01-22 17:23:27,091 - INFO - Epoch 92/200: Train Loss = 0.4429, Val Loss = 0.6456
+2025-01-22 17:23:28,873 - INFO - Epoch 93, Batch 5: Loss = 0.4358, Accuracy = 0.8063
+2025-01-22 17:23:30,588 - INFO - Epoch 93, Batch 10: Loss = 0.5080, Accuracy = 0.8055
+2025-01-22 17:23:32,339 - INFO - Validation: Loss = 0.6320, Accuracy = 0.6863, Precision = 0.6975, Recall = 0.6954, F1 = 0.6965
+2025-01-22 17:23:32,343 - INFO - Epoch 93/200: Train Loss = 0.4456, Val Loss = 0.6320
+2025-01-22 17:23:34,066 - INFO - Epoch 94, Batch 5: Loss = 0.4372, Accuracy = 0.8313
+2025-01-22 17:23:35,788 - INFO - Epoch 94, Batch 10: Loss = 0.4125, Accuracy = 0.8266
+2025-01-22 17:23:37,477 - INFO - Validation: Loss = 0.6406, Accuracy = 0.6879, Precision = 0.6985, Recall = 0.6985, F1 = 0.6985
+2025-01-22 17:23:37,481 - INFO - Epoch 94/200: Train Loss = 0.4362, Val Loss = 0.6406
+2025-01-22 17:23:39,198 - INFO - Epoch 95, Batch 5: Loss = 0.4689, Accuracy = 0.8297
+2025-01-22 17:23:40,892 - INFO - Epoch 95, Batch 10: Loss = 0.4079, Accuracy = 0.8266
+2025-01-22 17:23:42,575 - INFO - Validation: Loss = 0.6332, Accuracy = 0.6831, Precision = 0.6921, Recall = 0.6985, F1 = 0.6953
+2025-01-22 17:23:42,579 - INFO - Epoch 95/200: Train Loss = 0.4307, Val Loss = 0.6332
+2025-01-22 17:23:44,299 - INFO - Epoch 96, Batch 5: Loss = 0.4141, Accuracy = 0.8250
+2025-01-22 17:23:46,005 - INFO - Epoch 96, Batch 10: Loss = 0.4605, Accuracy = 0.8180
+2025-01-22 17:23:47,725 - INFO - Validation: Loss = 0.6295, Accuracy = 0.6799, Precision = 0.6879, Recall = 0.6985, F1 = 0.6931
+2025-01-22 17:23:47,729 - INFO - Epoch 96/200: Train Loss = 0.4313, Val Loss = 0.6295
+2025-01-22 17:23:49,438 - INFO - Epoch 97, Batch 5: Loss = 0.4818, Accuracy = 0.8313
+2025-01-22 17:23:51,129 - INFO - Epoch 97, Batch 10: Loss = 0.3786, Accuracy = 0.8305
+2025-01-22 17:23:52,843 - INFO - Validation: Loss = 0.6285, Accuracy = 0.6847, Precision = 0.6978, Recall = 0.6892, F1 = 0.6935
+2025-01-22 17:23:52,847 - INFO - Epoch 97/200: Train Loss = 0.4304, Val Loss = 0.6285
+2025-01-22 17:23:54,592 - INFO - Epoch 98, Batch 5: Loss = 0.4551, Accuracy = 0.8078
+2025-01-22 17:23:56,314 - INFO - Epoch 98, Batch 10: Loss = 0.4323, Accuracy = 0.8234
+2025-01-22 17:23:58,012 - INFO - Validation: Loss = 0.6334, Accuracy = 0.6863, Precision = 0.7065, Recall = 0.6738, F1 = 0.6898
+2025-01-22 17:23:58,016 - INFO - Epoch 98/200: Train Loss = 0.4365, Val Loss = 0.6334
+2025-01-22 17:23:59,735 - INFO - Epoch 99, Batch 5: Loss = 0.4497, Accuracy = 0.8094
+2025-01-22 17:24:01,438 - INFO - Epoch 99, Batch 10: Loss = 0.4064, Accuracy = 0.8219
+2025-01-22 17:24:03,121 - INFO - Validation: Loss = 0.6380, Accuracy = 0.6736, Precision = 0.7098, Recall = 0.6246, F1 = 0.6645
+2025-01-22 17:24:03,125 - INFO - Epoch 99/200: Train Loss = 0.4242, Val Loss = 0.6380
+2025-01-22 17:24:04,851 - INFO - Epoch 100, Batch 5: Loss = 0.4201, Accuracy = 0.8297
+2025-01-22 17:24:06,546 - INFO - Epoch 100, Batch 10: Loss = 0.4109, Accuracy = 0.8141
+2025-01-22 17:24:08,244 - INFO - Validation: Loss = 0.6428, Accuracy = 0.6799, Precision = 0.7183, Recall = 0.6277, F1 = 0.6700
+2025-01-22 17:24:08,248 - INFO - Epoch 100/200: Train Loss = 0.4337, Val Loss = 0.6428
+2025-01-22 17:24:09,977 - INFO - Epoch 101, Batch 5: Loss = 0.4558, Accuracy = 0.8078
+2025-01-22 17:24:11,689 - INFO - Epoch 101, Batch 10: Loss = 0.4246, Accuracy = 0.8164
+2025-01-22 17:24:13,384 - INFO - Validation: Loss = 0.6418, Accuracy = 0.6895, Precision = 0.7181, Recall = 0.6585, F1 = 0.6870
+2025-01-22 17:24:13,388 - INFO - Epoch 101/200: Train Loss = 0.4200, Val Loss = 0.6418
+2025-01-22 17:24:13,388 - INFO - Early stopping triggered.

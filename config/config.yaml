@@ -1,0 +1,101 @@
+model:
+  architecture: SiameseNetwork
+  input_size: [ 1, 105, 105 ]
+  cnn_layers:
+    conv1:
+      out_channels: 64
+      kernel_size: 10
+      stride: 1
+      pool_size: 2
+    conv2:
+      out_channels: 128
+      kernel_size: 7
+      stride: 1
+      pool_size: 2
+    conv3:
+      out_channels: 128
+      kernel_size: 4
+      stride: 1
+      pool_size: 2
+    conv4:
+      out_channels: 256
+      kernel_size: 4
+      stride: 1
+  fc_layers:
+    embedding_dim: 4096
+  initialization:
+    method: xavier
+    normal_params:
+      conv_weights:
+        mean: 0.0
+        std: 0.01
+      conv_biases:
+        mean: 0.5
+        std: 0.01
+      fc_weights:
+        mean: 0.0
+        std: 0.2
+      fc_biases:
+        mean: 0.5
+        std: 0.01
+
+training:
+  batch_size: 116
+  num_epochs: 200
+  learning_rate_decay: 0.99
+  optimizer: Adam
+  optimizer_params:
+    lr: 0.0004589905310509041
+    betas: [ 0.5, 0.9 ]
+    weight_decay: 2.204425101193955e-06
+  loss_function: BinaryCrossEntropy
+  hyperparameter_tuning:
+    enabled: false
+    method: bayesian
+    num_trials: 50
+    search_space:
+      batch_size: [ 32, 256 ]
+      learning_rate: [ 1e-6, 1e-3 ]
+      weight_decay: [ 1e-6, 1e-4 ]
+      betas: [ [ 0.9, 0.999 ], [ 0.5, 0.9 ] ]
+      optimizer: [ Adam, SGD, RMSprop ]
+      loss_function: [ BinaryCrossEntropy, RegularizedCrossEntropy ]
+  early_stopping:
+    patience: 50
+    min_delta: 1e-4
+
+
+data:
+  train_pairs_path: ./data/pairsDevTrain.txt
+  test_pairs_path: ./data/pairsDevTest.txt
+  lfw_data_path: ./data/lfw2/
+  image_size: [ 105, 105 ]
+  transformations:
+    train:
+      - type: Resize
+        size: [ 105, 105 ]
+      - type: RandomHorizontalFlip
+        p: 0.5
+      - type: RandomRotation
+        degrees: 10
+      - type: RandomAdjustSharpness
+        sharpness_factor: 2
+        p: 0.3
+    val:
+      - type: Resize
+        size: [ 105, 105 ]
+
+logging:
+  mlflow_experiment: siamese_one_shot
+  checkpoint_dir: ./output/checkpoints/
+  logs_dir: ./output/logs/
+  log_interval: 5
+
+validation:
+  val_split: 0.3
+  shuffle: true
+  random_seed: 42
+
+testing:
+  batch_size: 64
+  save_predictions: true
