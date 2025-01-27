@@ -48,7 +48,7 @@ training:
     lr: 0.0004589905310509041
     betas: [ 0.5, 0.9 ]
     weight_decay: 2.204425101193955e-06
-  loss_function: RegularizedCrossEntropy
+  loss_function: BinaryCrossEntropy
   hyperparameter_tuning:
     enabled: false
     method: bayesian
