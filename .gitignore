@@ -5,4 +5,4 @@
 temp/
 data/lfw2/
 mlruns/
-output/
+output/checkpoints

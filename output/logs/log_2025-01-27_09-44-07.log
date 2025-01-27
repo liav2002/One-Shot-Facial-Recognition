@@ -1,0 +1,30 @@
+2025-01-27 09:44:07,959 - INFO - 
+
+2025-01-27 09:44:08,079 - INFO - Initialized Conv2d weights with Xavier initialization.
+2025-01-27 09:44:08,080 - INFO - Initialized Conv2d weights with Xavier initialization.
+2025-01-27 09:44:08,080 - INFO - Initialized Conv2d weights with Xavier initialization.
+2025-01-27 09:44:08,082 - INFO - Initialized Conv2d weights with Xavier initialization.
+2025-01-27 09:44:08,177 - INFO - Initialized Linear weights with Xavier initialization.
+2025-01-27 09:44:08,178 - INFO - Initialized Linear weights with Xavier initialization.
+2025-01-27 09:44:08,273 - INFO - Split Results:
+2025-01-27 09:44:08,274 - INFO - 
++-------------------+---------+--------------+
+| Metric            |   Count | Percentage   |
++===================+=========+==============+
+| Train People      |    1520 |              |
++-------------------+---------+--------------+
+| Train Pairs       |    1572 | (71.45%)     |
++-------------------+---------+--------------+
+| Validation People |     612 |              |
++-------------------+---------+--------------+
+| Validation Pairs  |     628 | (28.55%)     |
++-------------------+---------+--------------+
+| Dropped Pairs     |       0 | (0.00%)      |
++-------------------+---------+--------------+
+2025-01-27 09:44:08,274 - INFO - Data prepared: 1572 training pairs, 628 validation pairs (Batch Size = 116).
+2025-01-27 09:44:08,274 - INFO - nn.BCELoss function defined as loss function.
+2025-01-27 09:44:08,274 - INFO - Adam optimizer initialized with parameters: {'lr': 0.0004589905310509041, 'betas': (0.5, 0.9), 'weight_decay': 2.204425101193955e-06}
+2025-01-27 09:44:08,274 - INFO - Trainer attributes updated from configuration.
+2025-01-27 09:44:08,276 - INFO - Checkpoint loaded from ./output/checkpoints/best_model.pth. Resuming from epoch 41.
+2025-01-27 09:44:09,894 - INFO - Test Loss: 0.9066, Test Accuracy: 0.7170
+2025-01-27 09:44:09,895 - INFO - Precision: 0.6941, Recall: 0.7760, F1 Score: 0.7328
