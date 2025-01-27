@@ -7,4 +7,4 @@ config/__pycache__/
 data/__pycache__/
 data/lfw2/
 mlruns/
-output/checkpoints
+output/
