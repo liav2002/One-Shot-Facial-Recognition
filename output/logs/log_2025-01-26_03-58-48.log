@@ -1,3 +1,5 @@
+Experiment 6: Xavier Initialization, Adam Optimizer, Regularized Cross Entropy (RCE) Loss, with Transforms
+
 2025-01-26 03:58:48,948 - INFO - Initialized Conv2d weights with Xavier initialization.
 2025-01-26 03:58:48,949 - INFO - Initialized Conv2d weights with Xavier initialization.
 2025-01-26 03:58:48,950 - INFO - Initialized Conv2d weights with Xavier initialization.

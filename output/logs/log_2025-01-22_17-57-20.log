@@ -1,3 +1,5 @@
+Experiment 5: SGD with Momentum, Binary Cross Entropy Loss, and Transformations
+
 2025-01-22 17:57:20,606 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
 2025-01-22 17:57:20,606 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
 2025-01-22 17:57:20,608 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01

@@ -1,3 +1,5 @@
+Experiment 2: Adam Optimizer, Binary Cross Entropy Loss, and Data Augmentation Transforms
+
 2025-01-22 16:08:47,420 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
 2025-01-22 16:08:47,420 - INFO - Initialized Conv2d bias with mean=0.5, std=0.01
 2025-01-22 16:08:47,422 - INFO - Initialized Conv2d weights with mean=0.0, std=0.01
