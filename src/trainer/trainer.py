@@ -56,7 +56,7 @@ class Trainer:
         and data loaders are consistent with the current state of `self.config`.
         """
         # Initialize model
-        self.model = SiameseNetwork(self.config).to(self.device)
+        self.model = SiameseNetwork(self.config["model"]).to(self.device)
 
         # Prepare data loaders
         self._prepare_data()
