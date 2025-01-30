@@ -99,3 +99,4 @@ validation:
 testing:
   batch_size: 64
   save_predictions: true
+  threshold: 0.75

@@ -5,7 +5,7 @@ from src.utils.logger import get_logger
 
 
 class SiameseNetwork(nn.Module):
-    def __init__(self, config: dict):
+    def __init__(self, config: dict, init_weights: bool = True):
         """
         Siamese Network architecture, dynamically built based on configuration.
 
@@ -17,8 +17,8 @@ class SiameseNetwork(nn.Module):
         self.logger = get_logger()
         self.logger.log_message("\n")
 
-        cnn_config = config['model']['cnn_layers']
-        input_size = config['model']['input_size']
+        cnn_config = config['cnn_layers']
+        input_size = config['input_size']
         self.cnn = nn.Sequential(
             nn.Conv2d(
                 in_channels=input_size[0],
@@ -58,7 +58,7 @@ class SiameseNetwork(nn.Module):
 
         self.flattened_size = cnn_config['conv4']['out_channels'] * 6 * 6
 
-        embedding_dim = config['model']['fc_layers']['embedding_dim']
+        embedding_dim = config['fc_layers']['embedding_dim']
         self.fc = nn.Sequential(
             nn.Linear(self.flattened_size, embedding_dim),
             nn.Sigmoid(),
@@ -69,9 +69,10 @@ class SiameseNetwork(nn.Module):
             nn.Sigmoid(),
         )
 
-        self.init_config = config['model']['initialization']
+        self.init_config = config['initialization']
 
-        self.apply(self._initialize_weights)
+        if init_weights:
+            self.apply(self._initialize_weights)
 
     def _initialize_weights(self, module):
         """
